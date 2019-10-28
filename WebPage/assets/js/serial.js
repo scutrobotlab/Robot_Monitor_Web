@@ -37,16 +37,17 @@ $(function(){
             contentType: 'application/json; charset=utf-8',
             async: false,
             data:JSON.stringify({
-                Board:parseInt($('#Board').val()),
-                Name:$('#Name').val(),
-                Act:parseInt($('#Act').val()),
-                Type:$('#Type').val(),
-                Addr :parseInt($('#Addr').val(),16),
-                Data:parseFloat($('#Data').val()),
+                Board:parseInt($('#variable-board').val()),
+                Name:$('#variable-name').val(),
+                Act:parseInt($('#variable-act').val()),
+                Type:$('#variable-type').val(),
+                Addr :parseInt($('#variable-addr').val(),16),
+                Data:parseFloat($('#variable-data').val()),
             }),
             success : function(data){
                 alert(data);
             }
         });
+        $("#NewVariable").modal('hide');
     });
 });

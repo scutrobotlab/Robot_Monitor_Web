@@ -1,45 +1,35 @@
 window.addEventListener("load", function(evt) {
-    var output = document.getElementById("output");
-    var input = document.getElementById("input");
     var ws;
-    var print = function(message) {
-        var d = document.createElement("div");
-        d.innerHTML = message;
-        output.appendChild(d);
-    };
-    document.getElementById("open").onclick = function(evt) {
+    $("#openWS").click (function(event){
         if (ws) {
             return false;
         }
-        ws = new WebSocket("ws://localhost:8080/ws");
+        ws = new WebSocket("ws://"+document.domain+":8080/ws");
         ws.onopen = function(evt) {
-            print("OPEN");
+            alert("Websocket connection established");
         }
         ws.onclose = function(evt) {
-            print("CLOSE");
             ws = null;
         }
         ws.onmessage = function(evt) {
-            print("RESPONSE: " + evt.data);
+            var jsonWS = JSON.parse(evt.data);
+            console.log(jsonWS.DataPack[0].Data)
+            var l =  myChart.data.datasets[0].data.length;
+            var d = {'x':l,'y':jsonWS.DataPack[0].Data}
+            myChart.data.labels.push(l)
+            myChart.data.datasets[0].data.push(d)
+            myChart.update()
         }
         ws.onerror = function(evt) {
             print("ERROR: " + evt.data);
         }
         return false;
-    };
-    document.getElementById("send").onclick = function(evt) {
-        if (!ws) {
-            return false;
-        }
-        print("SEND: " + input.value);
-        ws.send(input.value);
-        return false;
-    };
-    document.getElementById("close").onclick = function(evt) {
+    });
+    $("#closeWS").click (function(event) {
         if (!ws) {
             return false;
         }
         ws.close();
         return false;
-    };
+    });
 });

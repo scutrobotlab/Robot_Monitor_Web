@@ -6,29 +6,92 @@
         <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
     </head>
 <body>
-        <script src="/assets/js/websocket.js"></script>
-        <script src="/assets/js/serial.js"></script>
-    <form>
-        <button id="open">Open</button>
-        <button id="close">Close</button>
-        <p><input id="input" type="text" value="Hello world!">
-        <button id="send">Send</button>
-    </form>
-    串口：<select id="serialport" class="serialport"><option>请选择</option></select>
-    <button id="openserial">打开串口</button>
-    <button id="closeserial">关闭串口</button>
-    <form>
-        <input id="Board" type="number" value="1">
-        <input id="Name" type="text" value="traceme">
-        <input id="Act" type="number" value="1">
-        <input id="Type" type="text" value="float">
-        <input id="Addr" type="text" value="20004a40">
-        <input id="Data" type="number" step="0.001" value="1.1">
-    </form>
-    <button id="sendserial">添加</button>
-    <div id="output"></div>
-    </td></tr></table>
+    <div class="container">
+
+        <div class="alert alert-info" id="info-title">
+            <strong>坠好用的上位机</strong>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-serialport-tab" data-toggle="tab" href="#nav-serialport" role="tab" aria-controls="nav-home" aria-selected="true">串口</a>
+                        <a class="nav-item nav-link" id="nav-read-tab" data-toggle="tab" href="#nav-read" role="tab" aria-controls="nav-profile" aria-selected="false">观察</a>
+                        <a class="nav-item nav-link" id="nav-write-tab" data-toggle="tab" href="#nav-write" role="tab" aria-controls="nav-contact" aria-selected="false">修改</a>
+                    </div>
+                </nav>
+
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-serialport" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <p>
+                        <div class="row">
+                            串口：<select id="serialport" class="serialport custom-select d-block"><option>请选择</option></select>
+                        </div>
+                        </p>
+                        <p><button class="btn btn-primary" id="openserial">打开串口</button></p>
+                        <p><button class="btn btn-danger" id="closeserial">关闭串口</button></p>
+                    </div>
+                    <div class="tab-pane fade" id="nav-read" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewVariable" data-whatever="@getbootstrap">添加变量</button>
+                        <button type="button" class="btn btn-primary" id="openWS">启动</button>
+                        <button type="button" class="btn btn-danger" id="closeWS">停止</button>
+                        <div class="modal fade" id="NewVariable" tabindex="-1" role="dialog" aria-labelledby="NewVariableLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="NewVariableLabel">添加变量</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                <form>
+                                    <input type="hidden" id="variable-act" value="1">
+                                    <input type="hidden" id="variable-data" value="0">
+                                    <div class="form-group">
+                                        <label for="variable-board" class="col-form-label">板子代号</label>
+                                        <input class="form-control" id="variable-board" type="number" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="variable-name" class="col-form-label">变量名</label>
+                                        <input class="form-control" id="variable-name" type="text" value="A"></input>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="variable-type" class="col-form-label">变量类型</label>
+                                        <input class="form-control" id="variable-type" type="text" value="float"></input>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="variable-addr" class="col-form-label">变量地址</label>
+                                        <input class="form-control" id="variable-addr" type="text" value="20004a40"></input>
+                                    </div>
+                                </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary" id="sendserial">添加</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-write" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/myChart.js"></script>
+    <script src="/assets/js/websocket.js"></script>
+    <script src="/assets/js/serial.js"></script>
 </body>
 </html>
