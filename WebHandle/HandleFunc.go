@@ -14,7 +14,7 @@ import (
 	"../SerialHandle"
 )
 
-func CurrentSerialPortsWebHandler(w http.ResponseWriter, _ *http.Request) {
+func CurrentSerialPortWebHandler(w http.ResponseWriter, _ *http.Request) {
 	b, _ := json.Marshal(SerialHandle.CurrentSerialPort)
 	io.WriteString(w, string(b))
 }
@@ -61,7 +61,12 @@ func CloseSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func VariableActWebHandler(w http.ResponseWriter, r *http.Request) {
+func CurrentVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(DataPack.DataToRead)
+	io.WriteString(w, string(b))
+}
+
+func VariableOptWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var s SerialHandle.DataToSerial
 	var web DataPack.DataFromWeb_t
@@ -74,11 +79,11 @@ func VariableActWebHandler(w http.ResponseWriter, r *http.Request) {
 			if s.Act == DataPack.ACT_READ {
 				var t DataPack.DataToRead_t
 				t.GetWebData(&web)
-				DataPack.DataToRead = append(DataPack.DataToRead, t)
+				DataPack.DataToRead.Variables = append(DataPack.DataToRead.Variables, t)
 			} else if s.Act == DataPack.ACT_UNREAD {
-				for i, v := range DataPack.DataToRead {
+				for i, v := range DataPack.DataToRead.Variables {
 					if v.Addr == web.Addr {
-						DataPack.DataToRead = append(DataPack.DataToRead[:i], DataPack.DataToRead[i+1:]...)
+						DataPack.DataToRead.Variables = append(DataPack.DataToRead.Variables[:i], DataPack.DataToRead.Variables[i+1:]...)
 					}
 				}
 			}
@@ -95,11 +100,12 @@ func WebHandleStart() {
 	go SerialHandle.SerialParse(jsonWS)
 	WebSocketHandler := MakeWebSocketHandler(jsonWS)
 	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
-	http.HandleFunc("/serial", CurrentSerialPortsWebHandler)
+	http.HandleFunc("/serial", CurrentSerialPortWebHandler)
 	http.HandleFunc("/serial/list", ListSerialPortsWebHandler)
 	http.HandleFunc("/serial/open", OpenSerialPortWebHandler)
 	http.HandleFunc("/serial/close", CloseSerialPortWebHandler)
-	http.HandleFunc("/act", VariableActWebHandler)
+	http.HandleFunc("/variable", CurrentVariablesWebHandler)
+	http.HandleFunc("/variable/opt", VariableOptWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

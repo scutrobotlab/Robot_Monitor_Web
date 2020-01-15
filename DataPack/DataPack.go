@@ -61,4 +61,8 @@ func (p *DataToRead_t) GetWebData(d *DataFromWeb_t) {
 	p.Data = d.Data
 }
 
-var DataToRead []DataToRead_t
+type JsonDataToRead struct {
+	Variables []DataToRead_t
+}
+
+var DataToRead JsonDataToRead

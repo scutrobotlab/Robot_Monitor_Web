@@ -151,7 +151,7 @@ func SerialParse(jsonString chan string) {
 				if buff[i*16+1] == 2 {
 					chatData.Board = buff[i*16]
 					addr := DataPack.BytesToUint32(buff[i*16+3 : i*16+7])
-					for _, v := range DataPack.DataToRead {
+					for _, v := range DataPack.DataToRead.Variables {
 						if v.Addr == addr {
 							chatData.Name = v.Name
 							switch v.Type {
