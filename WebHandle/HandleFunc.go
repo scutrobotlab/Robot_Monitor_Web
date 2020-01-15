@@ -14,6 +14,11 @@ import (
 	"../SerialHandle"
 )
 
+func CurrentSerialPortsWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(SerialHandle.CurrentSerialPort)
+	io.WriteString(w, string(b))
+}
+
 func ListSerialPortsWebHandler(w http.ResponseWriter, _ *http.Request) {
 	jsonPack := DataPack.JsonSerialPort{Ports: SerialHandle.FindSerialPorts()}
 	b, _ := json.Marshal(jsonPack)
@@ -30,21 +35,29 @@ func OpenSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 	port := strings.Join(r.Form["port"], "")
 	if port != "" {
 		if SerialHandle.OpenSerialPort(port, baud) != nil {
-			io.WriteString(w, "Fail: Cannot open serial port")
+			io.WriteString(w, "{\"status\":11}")
 		} else {
-			io.WriteString(w, "Success")
+			io.WriteString(w, "{\"status\":0}")
+			SerialHandle.CurrentSerialPort.Name = port
+			SerialHandle.CurrentSerialPort.BaudRate = baud
 		}
 	} else {
-		io.WriteString(w, "Fail: empty port")
+		io.WriteString(w, "{\"status\":1}")
 	}
 }
 
 func CloseSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	if SerialHandle.CloseSerialPort() != nil {
-		io.WriteString(w, "Fail: Cannot close serial port")
+	if SerialHandle.CurrentSerialPort.Name != "" {
+		if SerialHandle.CloseSerialPort() != nil {
+			io.WriteString(w, "{\"status\":13}")
+		} else {
+			io.WriteString(w, "{\"status\":0}")
+			SerialHandle.CurrentSerialPort.Name = ""
+			SerialHandle.CurrentSerialPort.BaudRate = 0
+		}
 	} else {
-		io.WriteString(w, "Success")
+		io.WriteString(w, "{\"status\":12}")
 	}
 }
 
@@ -82,9 +95,10 @@ func WebHandleStart() {
 	go SerialHandle.SerialParse(jsonWS)
 	WebSocketHandler := MakeWebSocketHandler(jsonWS)
 	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
-	http.HandleFunc("/list", ListSerialPortsWebHandler)
-	http.HandleFunc("/open", OpenSerialPortWebHandler)
-	http.HandleFunc("/close", CloseSerialPortWebHandler)
+	http.HandleFunc("/serial", CurrentSerialPortsWebHandler)
+	http.HandleFunc("/serial/list", ListSerialPortsWebHandler)
+	http.HandleFunc("/serial/open", OpenSerialPortWebHandler)
+	http.HandleFunc("/serial/close", CloseSerialPortWebHandler)
 	http.HandleFunc("/act", VariableActWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))

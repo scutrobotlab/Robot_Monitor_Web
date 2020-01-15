@@ -12,6 +12,12 @@ import (
 	"go.bug.st/serial.v1"
 )
 
+type currentSerialPortT struct {
+	Name     string
+	BaudRate int
+}
+
+var CurrentSerialPort currentSerialPortT
 var MySerialPort serial.Port
 
 type DataToSerial struct {
@@ -130,7 +136,7 @@ func (p *DataToSerial) Send() error {
 func SerialParse(jsonString chan string) {
 	var b []byte
 	for {
-		if MySerialPort != nil {
+		if MySerialPort != nil && CurrentSerialPort.Name != "" {
 			var chatPack DataPack.DataToChat
 			var chatData DataPack.DataToChat_t
 			buff, err := SerialReceive()
