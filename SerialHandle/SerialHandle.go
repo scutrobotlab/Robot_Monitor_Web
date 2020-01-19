@@ -46,10 +46,9 @@ func OpenSerialPort(portName string, baudRate int) error {
 	MySerialPort, err = serial.Open(portName, mode)
 	if err != nil {
 		return err
-	} else {
+	}
 		return nil
 	}
-}
 
 func CloseSerialPort() error {
 	if MySerialPort != nil {
@@ -145,12 +144,15 @@ func SerialParse(jsonString chan string) {
 						}
 					}
 					chartPack.DataPack = append(chartPack.DataPack, chartData)
-					b, _ = json.Marshal(chartPack)
-					jsonString <- string(b)
+					b, err = json.Marshal(chartPack)
+					if err != nil {
+						log.Fatalln(err)
+					}
 				} else {
 					log.Println("Invalid data pack")
 				}
 			}
+			jsonString <- string(b)
 		}
 		time.Sleep(9 * time.Millisecond)
 	}

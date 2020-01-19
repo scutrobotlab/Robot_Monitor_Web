@@ -157,6 +157,7 @@ func WebHandleStart() {
 	http.HandleFunc("/variable/del", variableDelWebHandler)
 	http.HandleFunc("/variable/mod", variableModWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
-	log.Println("Listen on port 8080.")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	addr := ":8080"
+	log.Println("Listen on " + addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
