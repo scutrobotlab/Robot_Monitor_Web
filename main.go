@@ -1,11 +1,11 @@
 package main
 
 import (
-	"./SerialHandle"
-	"./WebHandle"
+	"./serialhandle"
+	"./webhandle"
 )
 
 func main() {
-	defer SerialHandle.CloseSerialPort()
-	WebHandle.WebHandleStart()
+	defer serialhandle.CloseSerialPort()
+	webhandle.WebHandleStart()
 }

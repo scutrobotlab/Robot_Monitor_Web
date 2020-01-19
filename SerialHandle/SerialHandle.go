@@ -1,4 +1,4 @@
-package SerialHandle
+package serialhandle
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"../DataPack"
+	"../datapack"
 
 	"go.bug.st/serial.v1"
 )
@@ -34,7 +34,8 @@ func FindSerialPorts() []string {
 		log.Fatal(err)
 	}
 	if len(tmp) == 0 {
-		log.Fatal("No serial ports found!")
+		log.Println("No serial ports found!")
+		return nil
 	}
 	var ports []string
 	for _, port := range tmp {
@@ -61,9 +62,8 @@ func OpenSerialPort(portName string, baudRate int) error {
 func CloseSerialPort() error {
 	if MySerialPort != nil {
 		return MySerialPort.Close()
-	} else {
-		return errors.New("empty serial port")
 	}
+	return errors.New("empty serial port")
 }
 
 func SerialSend(data []byte) error {
@@ -86,7 +86,7 @@ func SerialReceive() ([]byte, error) {
 	return buff[:n], nil
 }
 
-func (p *DataToSerial) GetDataFromWeb(d *DataPack.DataFromWeb_t) {
+func (p *DataToSerial) GetDataFromWeb(d *datapack.DataFromWeb_t) {
 	p.Board = d.Board
 	p.Act = d.Act
 	p.Type = d.Type
@@ -98,34 +98,34 @@ func (p *DataToSerial) Send() error {
 	data := make([]byte, 3)
 	data[0] = byte(p.Board)
 	data[1] = p.Act
-	data[2] = byte(DataPack.TypeLen[p.Type])
-	a := DataPack.AnyToBytes(p.Addr)
+	data[2] = byte(datapack.TypeLen[p.Type])
+	a := datapack.AnyToBytes(p.Addr)
 	data = append(data, a...)
 	b := make([]byte, 8)
-	if p.Act == DataPack.ACT_WRITE {
+	if p.Act == datapack.ACT_WRITE {
 		switch p.Type {
 		case "uint8_t":
-			b = DataPack.AnyToBytes(uint8(p.Data))
+			b = datapack.AnyToBytes(uint8(p.Data))
 		case "uint16_t":
-			b = DataPack.AnyToBytes(uint16(p.Data))
+			b = datapack.AnyToBytes(uint16(p.Data))
 		case "uint32_t":
-			b = DataPack.AnyToBytes(uint32(p.Data))
+			b = datapack.AnyToBytes(uint32(p.Data))
 		case "uint64_t":
-			b = DataPack.AnyToBytes(uint64(p.Data))
+			b = datapack.AnyToBytes(uint64(p.Data))
 		case "int8_t":
-			b = DataPack.AnyToBytes(int8(p.Data))
+			b = datapack.AnyToBytes(int8(p.Data))
 		case "int16_t":
-			b = DataPack.AnyToBytes(int16(p.Data))
+			b = datapack.AnyToBytes(int16(p.Data))
 		case "int32_t", "int":
-			b = DataPack.AnyToBytes(int32(p.Data))
+			b = datapack.AnyToBytes(int32(p.Data))
 		case "int64_t":
-			b = DataPack.AnyToBytes(int64(p.Data))
+			b = datapack.AnyToBytes(int64(p.Data))
 		case "float":
-			b = DataPack.AnyToBytes(float32(p.Data))
+			b = datapack.AnyToBytes(float32(p.Data))
 		case "double":
-			b = DataPack.AnyToBytes(float64(p.Data))
+			b = datapack.AnyToBytes(float64(p.Data))
 		default:
-			b = DataPack.AnyToBytes(p.Data)
+			b = datapack.AnyToBytes(p.Data)
 		}
 	}
 	data = append(data, b...)
@@ -137,8 +137,8 @@ func SerialParse(jsonString chan string) {
 	var b []byte
 	for {
 		if MySerialPort != nil && CurrentSerialPort.Name != "" {
-			var chatPack DataPack.DataToChat
-			var chatData DataPack.DataToChat_t
+			var chatPack datapack.DataToChat
+			var chatData datapack.DataToChat_t
 			buff, err := SerialReceive()
 			if err != nil {
 				log.Println("Fail: Can't receive serial data")
@@ -150,31 +150,31 @@ func SerialParse(jsonString chan string) {
 			for i := 0; i < packNum; i++ {
 				if buff[i*16+1] == 2 {
 					chatData.Board = buff[i*16]
-					addr := DataPack.BytesToUint32(buff[i*16+3 : i*16+7])
-					for _, v := range DataPack.DataToRead.Variables {
+					addr := datapack.BytesToUint32(buff[i*16+3 : i*16+7])
+					for _, v := range datapack.DataToRead.Variables {
 						if v.Addr == addr {
 							chatData.Name = v.Name
 							switch v.Type {
 							case "uint8_t":
-								chatData.Data = float64(DataPack.BytesToUint8(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToUint8(buff[i*16+7 : i*16+15]))
 							case "uint16_t":
-								chatData.Data = float64(DataPack.BytesToUint16(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToUint16(buff[i*16+7 : i*16+15]))
 							case "uint32_t":
-								chatData.Data = float64(DataPack.BytesToUint32(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToUint32(buff[i*16+7 : i*16+15]))
 							case "uint64_t":
-								chatData.Data = float64(DataPack.BytesToUint64(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToUint64(buff[i*16+7 : i*16+15]))
 							case "int8_t":
-								chatData.Data = float64(DataPack.BytesToInt8(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToInt8(buff[i*16+7 : i*16+15]))
 							case "int16_t":
-								chatData.Data = float64(DataPack.BytesToInt16(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToInt16(buff[i*16+7 : i*16+15]))
 							case "int32_t", "int":
-								chatData.Data = float64(DataPack.BytesToInt32(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToInt32(buff[i*16+7 : i*16+15]))
 							case "int64_t":
-								chatData.Data = float64(DataPack.BytesToInt64(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToInt64(buff[i*16+7 : i*16+15]))
 							case "float":
-								chatData.Data = float64(DataPack.BytesToFloat32(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToFloat32(buff[i*16+7 : i*16+15]))
 							case "double":
-								chatData.Data = float64(DataPack.BytesToFloat64(buff[i*16+7 : i*16+15]))
+								chatData.Data = float64(datapack.BytesToFloat64(buff[i*16+7 : i*16+15]))
 							default:
 								chatData.Data = 0
 							}

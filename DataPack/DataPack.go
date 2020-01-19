@@ -1,4 +1,4 @@
-package DataPack
+package datapack
 
 const MAX_PACKET_NUM = 5
 
@@ -20,10 +20,6 @@ var TypeLen = map[string]int{
 	"int":      4,
 	"float":    4,
 	"double":   8,
-}
-
-type JsonSerialPort struct {
-	Ports []string
 }
 
 type DataFromWeb_t struct {

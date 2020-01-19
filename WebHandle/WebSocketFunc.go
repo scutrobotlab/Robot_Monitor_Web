@@ -1,4 +1,4 @@
-package WebHandle
+package webhandle
 
 import (
 	"log"
@@ -12,7 +12,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func MakeWebSocketHandler(jsonString chan string) func(w http.ResponseWriter, r *http.Request) {
+func makeWebSocketHandler(jsonString chan string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		c, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {

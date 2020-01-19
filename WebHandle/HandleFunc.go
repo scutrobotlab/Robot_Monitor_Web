@@ -1,4 +1,4 @@
-package WebHandle
+package webhandle
 
 import (
 	"encoding/json"
@@ -6,26 +6,30 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 
-	"../DataPack"
+	"../datapack"
 
-	"../SerialHandle"
+	"../serialhandle"
 )
 
-func CurrentSerialPortWebHandler(w http.ResponseWriter, _ *http.Request) {
-	b, _ := json.Marshal(SerialHandle.CurrentSerialPort)
+func currentSerialPortWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(serialhandle.CurrentSerialPort)
 	io.WriteString(w, string(b))
 }
 
-func ListSerialPortsWebHandler(w http.ResponseWriter, _ *http.Request) {
-	jsonPack := DataPack.JsonSerialPort{Ports: SerialHandle.FindSerialPorts()}
+func listSerialPortsWebHandler(w http.ResponseWriter, _ *http.Request) {
+	type jsonSerialPort struct {
+		Ports []string
+	}
+	jsonPack := jsonSerialPort{Ports: serialhandle.FindSerialPorts()}
 	b, _ := json.Marshal(jsonPack)
 	io.WriteString(w, string(b))
 }
 
-func OpenSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
+func openSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	r.ParseForm()
 	baud, err := strconv.Atoi(strings.Join(r.Form["baud"], ""))
@@ -34,56 +38,69 @@ func OpenSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	port := strings.Join(r.Form["port"], "")
 	if port != "" {
-		if SerialHandle.OpenSerialPort(port, baud) != nil {
+		if serialhandle.OpenSerialPort(port, baud) != nil {
 			io.WriteString(w, "{\"status\":11}")
 		} else {
 			io.WriteString(w, "{\"status\":0}")
-			SerialHandle.CurrentSerialPort.Name = port
-			SerialHandle.CurrentSerialPort.BaudRate = baud
+			serialhandle.CurrentSerialPort.Name = port
+			serialhandle.CurrentSerialPort.BaudRate = baud
 		}
 	} else {
 		io.WriteString(w, "{\"status\":1}")
 	}
 }
 
-func CloseSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
+func closeSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	if SerialHandle.CurrentSerialPort.Name != "" {
-		if SerialHandle.CloseSerialPort() != nil {
+	if serialhandle.CurrentSerialPort.Name != "" {
+		if serialhandle.CloseSerialPort() != nil {
 			io.WriteString(w, "{\"status\":13}")
 		} else {
 			io.WriteString(w, "{\"status\":0}")
-			SerialHandle.CurrentSerialPort.Name = ""
-			SerialHandle.CurrentSerialPort.BaudRate = 0
+			serialhandle.CurrentSerialPort.Name = ""
+			serialhandle.CurrentSerialPort.BaudRate = 0
 		}
 	} else {
 		io.WriteString(w, "{\"status\":12}")
 	}
 }
 
-func CurrentVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
-	b, _ := json.Marshal(DataPack.DataToRead)
+func currentVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(datapack.DataToRead)
 	io.WriteString(w, string(b))
 }
 
-func VariableOptWebHandler(w http.ResponseWriter, r *http.Request) {
+func variableTypesWebHandler(w http.ResponseWriter, _ *http.Request) {
+	type jsonTypes struct {
+		Types []string
+	}
+	var types jsonTypes
+	for k := range datapack.TypeLen {
+		types.Types = append(types.Types, k)
+	}
+	sort.Strings(types.Types)
+	b, _ := json.Marshal(types)
+	io.WriteString(w, string(b))
+}
+
+func variableOptWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var s SerialHandle.DataToSerial
-	var web DataPack.DataFromWeb_t
+	var s serialhandle.DataToSerial
+	var web datapack.DataFromWeb_t
 	postData, _ := ioutil.ReadAll(r.Body)
 	if json.Unmarshal(postData, &web) == nil {
 		s.GetDataFromWeb(&web)
 		if s.Send() != nil {
 			io.WriteString(w, "Fail: Cannot send data")
 		} else {
-			if s.Act == DataPack.ACT_READ {
-				var t DataPack.DataToRead_t
+			if s.Act == datapack.ACT_READ {
+				var t datapack.DataToRead_t
 				t.GetWebData(&web)
-				DataPack.DataToRead.Variables = append(DataPack.DataToRead.Variables, t)
-			} else if s.Act == DataPack.ACT_UNREAD {
-				for i, v := range DataPack.DataToRead.Variables {
+				datapack.DataToRead.Variables = append(datapack.DataToRead.Variables, t)
+			} else if s.Act == datapack.ACT_UNREAD {
+				for i, v := range datapack.DataToRead.Variables {
 					if v.Addr == web.Addr {
-						DataPack.DataToRead.Variables = append(DataPack.DataToRead.Variables[:i], DataPack.DataToRead.Variables[i+1:]...)
+						datapack.DataToRead.Variables = append(datapack.DataToRead.Variables[:i], datapack.DataToRead.Variables[i+1:]...)
 					}
 				}
 			}
@@ -97,15 +114,16 @@ func VariableOptWebHandler(w http.ResponseWriter, r *http.Request) {
 
 func WebHandleStart() {
 	jsonWS := make(chan string, 10)
-	go SerialHandle.SerialParse(jsonWS)
-	WebSocketHandler := MakeWebSocketHandler(jsonWS)
+	go serialhandle.SerialParse(jsonWS)
+	WebSocketHandler := makeWebSocketHandler(jsonWS)
 	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
-	http.HandleFunc("/serial", CurrentSerialPortWebHandler)
-	http.HandleFunc("/serial/list", ListSerialPortsWebHandler)
-	http.HandleFunc("/serial/open", OpenSerialPortWebHandler)
-	http.HandleFunc("/serial/close", CloseSerialPortWebHandler)
-	http.HandleFunc("/variable", CurrentVariablesWebHandler)
-	http.HandleFunc("/variable/opt", VariableOptWebHandler)
+	http.HandleFunc("/serial", currentSerialPortWebHandler)
+	http.HandleFunc("/serial/list", listSerialPortsWebHandler)
+	http.HandleFunc("/serial/open", openSerialPortWebHandler)
+	http.HandleFunc("/serial/close", closeSerialPortWebHandler)
+	http.HandleFunc("/variable", currentVariablesWebHandler)
+	http.HandleFunc("/variable/types", variableTypesWebHandler)
+	http.HandleFunc("/variable/opt", variableOptWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

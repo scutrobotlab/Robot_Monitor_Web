@@ -1,4 +1,4 @@
-package DataPack
+package datapack
 
 import (
 	"bytes"
