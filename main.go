@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./serialhandle"
-	"./webhandle"
+	"www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/SerialHandle"
+	"www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/WebHandle"
 )
 
 func main() {
