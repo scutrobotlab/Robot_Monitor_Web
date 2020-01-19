@@ -1,7 +1,7 @@
 $(function(){
     $.ajax({
         type: 'GET',
-        url: 'list',
+        url: '/serial/list',
         dataType: 'json',
         success : function(data){
             for(var i=0;i<data.Ports.length;i++){
@@ -14,7 +14,7 @@ $(function(){
         $.ajax({
             type: 'POST',
             data:"port="+$('#serialport').val(), 
-            url: 'open',
+            url: '/serial/open',
             success : function(data){
                 alert(data);
             }
@@ -23,7 +23,7 @@ $(function(){
     $("#closeserial").click(function(event){
         $.ajax({
             type: 'GET',
-            url: 'close',
+            url: '/serial/close',
             success : function(data){
                 alert(data);
             }
@@ -32,14 +32,13 @@ $(function(){
     $("#sendserial").click(function(event){
         $.ajax({
             type: 'POST',
-            url: 'act',
+            url: '/variable/add',
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             async: false,
             data:JSON.stringify({
                 Board:parseInt($('#variable-board').val()),
                 Name:$('#variable-name').val(),
-                Act:parseInt($('#variable-act').val()),
                 Type:$('#variable-type').val(),
                 Addr :parseInt($('#variable-addr').val(),16),
                 Data:parseFloat($('#variable-data').val()),

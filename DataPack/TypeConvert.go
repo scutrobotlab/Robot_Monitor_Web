@@ -12,6 +12,33 @@ func AnyToBytes(i interface{}) []byte {
 	return buf.Bytes()
 }
 
+func SpecToBytes(vType string, i float64) []byte {
+	switch vType {
+	case "uint8_t":
+		return AnyToBytes(uint8(i))
+	case "uint16_t":
+		return AnyToBytes(uint16(i))
+	case "uint32_t":
+		return AnyToBytes(uint32(i))
+	case "uint64_t":
+		return AnyToBytes(uint64(i))
+	case "int8_t":
+		return AnyToBytes(int8(i))
+	case "int16_t":
+		return AnyToBytes(int16(i))
+	case "int32_t", "int":
+		return AnyToBytes(int32(i))
+	case "int64_t":
+		return AnyToBytes(int64(i))
+	case "float":
+		return AnyToBytes(float32(i))
+	case "double":
+		return AnyToBytes(float64(i))
+	default:
+		return AnyToBytes(i)
+	}
+}
+
 func BytesToInt8(i []byte) int8 {
 	var o int8
 	buf := bytes.NewReader(i)

@@ -86,47 +86,16 @@ func SerialReceive() ([]byte, error) {
 	return buff[:n], nil
 }
 
-func (p *DataToSerial) GetDataFromWeb(d *datapack.DataFromWeb_t) {
-	p.Board = d.Board
-	p.Act = d.Act
-	p.Type = d.Type
-	p.Addr = d.Addr
-	p.Data = d.Data
-}
-
-func (p *DataToSerial) Send() error {
+func SerialSendCmd(act uint8, variable datapack.VariableT) error {
 	data := make([]byte, 3)
-	data[0] = byte(p.Board)
-	data[1] = p.Act
-	data[2] = byte(datapack.TypeLen[p.Type])
-	a := datapack.AnyToBytes(p.Addr)
+	data[0] = byte(variable.Board)
+	data[1] = act
+	data[2] = byte(datapack.TypeLen[variable.Type])
+	a := datapack.AnyToBytes(variable.Addr)
 	data = append(data, a...)
 	b := make([]byte, 8)
-	if p.Act == datapack.ACT_WRITE {
-		switch p.Type {
-		case "uint8_t":
-			b = datapack.AnyToBytes(uint8(p.Data))
-		case "uint16_t":
-			b = datapack.AnyToBytes(uint16(p.Data))
-		case "uint32_t":
-			b = datapack.AnyToBytes(uint32(p.Data))
-		case "uint64_t":
-			b = datapack.AnyToBytes(uint64(p.Data))
-		case "int8_t":
-			b = datapack.AnyToBytes(int8(p.Data))
-		case "int16_t":
-			b = datapack.AnyToBytes(int16(p.Data))
-		case "int32_t", "int":
-			b = datapack.AnyToBytes(int32(p.Data))
-		case "int64_t":
-			b = datapack.AnyToBytes(int64(p.Data))
-		case "float":
-			b = datapack.AnyToBytes(float32(p.Data))
-		case "double":
-			b = datapack.AnyToBytes(float64(p.Data))
-		default:
-			b = datapack.AnyToBytes(p.Data)
-		}
+	if act == datapack.ACT_WRITE {
+		b = datapack.SpecToBytes(variable.Type, variable.Data)
 	}
 	data = append(data, b...)
 	data = append(data, '\n')
@@ -137,8 +106,8 @@ func SerialParse(jsonString chan string) {
 	var b []byte
 	for {
 		if MySerialPort != nil && CurrentSerialPort.Name != "" {
-			var chatPack datapack.DataToChat
-			var chatData datapack.DataToChat_t
+			var chartPack datapack.DataToChart
+			var chartData datapack.DataToChartT
 			buff, err := SerialReceive()
 			if err != nil {
 				log.Println("Fail: Can't receive serial data")
@@ -149,39 +118,39 @@ func SerialParse(jsonString chan string) {
 			packNum := len(buff) / 16
 			for i := 0; i < packNum; i++ {
 				if buff[i*16+1] == 2 {
-					chatData.Board = buff[i*16]
+					chartData.Board = buff[i*16]
 					addr := datapack.BytesToUint32(buff[i*16+3 : i*16+7])
-					for _, v := range datapack.DataToRead.Variables {
+					for _, v := range datapack.CurrentVariables.Variables {
 						if v.Addr == addr {
-							chatData.Name = v.Name
+							chartData.Name = v.Name
 							switch v.Type {
 							case "uint8_t":
-								chatData.Data = float64(datapack.BytesToUint8(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToUint8(buff[i*16+7 : i*16+15]))
 							case "uint16_t":
-								chatData.Data = float64(datapack.BytesToUint16(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToUint16(buff[i*16+7 : i*16+15]))
 							case "uint32_t":
-								chatData.Data = float64(datapack.BytesToUint32(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToUint32(buff[i*16+7 : i*16+15]))
 							case "uint64_t":
-								chatData.Data = float64(datapack.BytesToUint64(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToUint64(buff[i*16+7 : i*16+15]))
 							case "int8_t":
-								chatData.Data = float64(datapack.BytesToInt8(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToInt8(buff[i*16+7 : i*16+15]))
 							case "int16_t":
-								chatData.Data = float64(datapack.BytesToInt16(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToInt16(buff[i*16+7 : i*16+15]))
 							case "int32_t", "int":
-								chatData.Data = float64(datapack.BytesToInt32(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToInt32(buff[i*16+7 : i*16+15]))
 							case "int64_t":
-								chatData.Data = float64(datapack.BytesToInt64(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToInt64(buff[i*16+7 : i*16+15]))
 							case "float":
-								chatData.Data = float64(datapack.BytesToFloat32(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToFloat32(buff[i*16+7 : i*16+15]))
 							case "double":
-								chatData.Data = float64(datapack.BytesToFloat64(buff[i*16+7 : i*16+15]))
+								chartData.Data = float64(datapack.BytesToFloat64(buff[i*16+7 : i*16+15]))
 							default:
-								chatData.Data = 0
+								chartData.Data = 0
 							}
 						}
 					}
-					chatPack.DataPack = append(chatPack.DataPack, chatData)
-					b, _ = json.Marshal(chatPack)
+					chartPack.DataPack = append(chartPack.DataPack, chartData)
+					b, _ = json.Marshal(chartPack)
 					jsonString <- string(b)
 				} else {
 					log.Println("Invalid data pack")

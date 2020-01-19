@@ -66,7 +66,7 @@ func closeSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func currentVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
-	b, _ := json.Marshal(datapack.DataToRead)
+	b, _ := json.Marshal(datapack.CurrentVariables)
 	io.WriteString(w, string(b))
 }
 
@@ -83,33 +83,46 @@ func variableTypesWebHandler(w http.ResponseWriter, _ *http.Request) {
 	io.WriteString(w, string(b))
 }
 
-func variableOptWebHandler(w http.ResponseWriter, r *http.Request) {
+func variableAddWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var s serialhandle.DataToSerial
-	var web datapack.DataFromWeb_t
+	var newVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
-	if json.Unmarshal(postData, &web) == nil {
-		s.GetDataFromWeb(&web)
-		if s.Send() != nil {
-			io.WriteString(w, "Fail: Cannot send data")
-		} else {
-			if s.Act == datapack.ACT_READ {
-				var t datapack.DataToRead_t
-				t.GetWebData(&web)
-				datapack.DataToRead.Variables = append(datapack.DataToRead.Variables, t)
-			} else if s.Act == datapack.ACT_UNREAD {
-				for i, v := range datapack.DataToRead.Variables {
-					if v.Addr == web.Addr {
-						datapack.DataToRead.Variables = append(datapack.DataToRead.Variables[:i], datapack.DataToRead.Variables[i+1:]...)
-					}
-				}
+	if json.Unmarshal(postData, &newVariable) == nil {
+		serialhandle.SerialSendCmd(datapack.ACT_READ, newVariable)
+		datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables, newVariable)
+		io.WriteString(w, "{\"status\":0}")
+	} else {
+		io.WriteString(w, "{\"status\":21}")
+	}
+}
+
+func variableDelWebHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	var oldVariable datapack.VariableT
+	postData, _ := ioutil.ReadAll(r.Body)
+	if json.Unmarshal(postData, &oldVariable) == nil {
+		for i, v := range datapack.CurrentVariables.Variables {
+			if v.Addr == oldVariable.Addr {
+				serialhandle.SerialSendCmd(datapack.ACT_UNREAD, oldVariable)
+				datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables[:i], datapack.CurrentVariables.Variables[i+1:]...)
+				io.WriteString(w, "{\"status\":0}")
 			}
-			io.WriteString(w, "Success")
 		}
 	} else {
-		io.WriteString(w, "Fail: Unsupported json format")
+		io.WriteString(w, "{\"status\":21}")
 	}
+}
 
+func variableModWebHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	var modVariable datapack.VariableT
+	postData, _ := ioutil.ReadAll(r.Body)
+	if json.Unmarshal(postData, &modVariable) == nil {
+		serialhandle.SerialSendCmd(datapack.ACT_WRITE, modVariable)
+		io.WriteString(w, "{\"status\":0}")
+	} else {
+		io.WriteString(w, "{\"status\":21}")
+	}
 }
 
 func WebHandleStart() {
@@ -123,7 +136,9 @@ func WebHandleStart() {
 	http.HandleFunc("/serial/close", closeSerialPortWebHandler)
 	http.HandleFunc("/variable", currentVariablesWebHandler)
 	http.HandleFunc("/variable/types", variableTypesWebHandler)
-	http.HandleFunc("/variable/opt", variableOptWebHandler)
+	http.HandleFunc("/variable/add", variableAddWebHandler)
+	http.HandleFunc("/variable/del", variableDelWebHandler)
+	http.HandleFunc("/variable/mod", variableModWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

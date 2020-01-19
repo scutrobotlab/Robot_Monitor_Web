@@ -22,16 +22,7 @@ var TypeLen = map[string]int{
 	"double":   8,
 }
 
-type DataFromWeb_t struct {
-	Board uint8
-	Name  string
-	Act   uint8
-	Type  string
-	Addr  uint32
-	Data  float64
-}
-
-type DataToRead_t struct {
+type VariableT struct {
 	Board uint8
 	Name  string
 	Type  string
@@ -39,26 +30,18 @@ type DataToRead_t struct {
 	Data  float64
 }
 
-type DataToChat_t struct {
+type jsonCurrentVariablesT struct {
+	Variables []VariableT
+}
+
+var CurrentVariables jsonCurrentVariablesT
+
+type DataToChartT struct {
 	Board uint8
 	Name  string
 	Data  float64
 }
 
-type DataToChat struct {
-	DataPack []DataToChat_t
+type DataToChart struct {
+	DataPack []DataToChartT
 }
-
-func (p *DataToRead_t) GetWebData(d *DataFromWeb_t) {
-	p.Board = d.Board
-	p.Name = d.Name
-	p.Type = d.Type
-	p.Addr = d.Addr
-	p.Data = d.Data
-}
-
-type JsonDataToRead struct {
-	Variables []DataToRead_t
-}
-
-var DataToRead JsonDataToRead
