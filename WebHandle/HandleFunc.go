@@ -88,9 +88,18 @@ func variableAddWebHandler(w http.ResponseWriter, r *http.Request) {
 	var newVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
 	if json.Unmarshal(postData, &newVariable) == nil {
-		serialhandle.SerialSendCmd(datapack.ACT_READ, newVariable)
-		datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables, newVariable)
-		io.WriteString(w, "{\"status\":0}")
+		for _, v := range datapack.CurrentVariables.Variables {
+			if v.Addr == newVariable.Addr {
+				io.WriteString(w, "{\"status\":23}")
+				return
+			}
+		}
+		if serialhandle.SerialSendCmd(datapack.ACT_READ, newVariable) != nil {
+			io.WriteString(w, "{\"status\":22}")
+		} else {
+			datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables, newVariable)
+			io.WriteString(w, "{\"status\":0}")
+		}
 	} else {
 		io.WriteString(w, "{\"status\":21}")
 	}
@@ -103,14 +112,19 @@ func variableDelWebHandler(w http.ResponseWriter, r *http.Request) {
 	if json.Unmarshal(postData, &oldVariable) == nil {
 		for i, v := range datapack.CurrentVariables.Variables {
 			if v.Addr == oldVariable.Addr {
-				serialhandle.SerialSendCmd(datapack.ACT_UNREAD, oldVariable)
-				datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables[:i], datapack.CurrentVariables.Variables[i+1:]...)
-				io.WriteString(w, "{\"status\":0}")
+				if serialhandle.SerialSendCmd(datapack.ACT_UNREAD, oldVariable) != nil {
+					io.WriteString(w, "{\"status\":22}")
+				} else {
+					datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables[:i], datapack.CurrentVariables.Variables[i+1:]...)
+					io.WriteString(w, "{\"status\":0}")
+				}
+				return
 			}
 		}
-	} else {
-		io.WriteString(w, "{\"status\":21}")
+		io.WriteString(w, "{\"status\":24}")
+		return
 	}
+	io.WriteString(w, "{\"status\":21}")
 }
 
 func variableModWebHandler(w http.ResponseWriter, r *http.Request) {
@@ -118,8 +132,11 @@ func variableModWebHandler(w http.ResponseWriter, r *http.Request) {
 	var modVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
 	if json.Unmarshal(postData, &modVariable) == nil {
-		serialhandle.SerialSendCmd(datapack.ACT_WRITE, modVariable)
-		io.WriteString(w, "{\"status\":0}")
+		if serialhandle.SerialSendCmd(datapack.ACT_WRITE, modVariable) != nil {
+			io.WriteString(w, "{\"status\":22}")
+		} else {
+			io.WriteString(w, "{\"status\":0}")
+		}
 	} else {
 		io.WriteString(w, "{\"status\":21}")
 	}

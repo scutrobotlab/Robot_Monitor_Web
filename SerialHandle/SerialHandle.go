@@ -87,19 +87,22 @@ func SerialReceive() ([]byte, error) {
 }
 
 func SerialSendCmd(act uint8, variable datapack.VariableT) error {
-	data := make([]byte, 3)
-	data[0] = byte(variable.Board)
-	data[1] = act
-	data[2] = byte(datapack.TypeLen[variable.Type])
-	a := datapack.AnyToBytes(variable.Addr)
-	data = append(data, a...)
-	b := make([]byte, 8)
-	if act == datapack.ACT_WRITE {
-		b = datapack.SpecToBytes(variable.Type, variable.Data)
+	if MySerialPort != nil && CurrentSerialPort.Name != "" {
+		data := make([]byte, 3)
+		data[0] = byte(variable.Board)
+		data[1] = act
+		data[2] = byte(datapack.TypeLen[variable.Type])
+		a := datapack.AnyToBytes(variable.Addr)
+		data = append(data, a...)
+		b := make([]byte, 8)
+		if act == datapack.ACT_WRITE {
+			b = datapack.SpecToBytes(variable.Type, variable.Data)
+		}
+		data = append(data, b...)
+		data = append(data, '\n')
+		return SerialSend(data)
 	}
-	data = append(data, b...)
-	data = append(data, '\n')
-	return SerialSend(data)
+	return errors.New("No serial port")
 }
 
 func SerialParse(jsonString chan string) {
