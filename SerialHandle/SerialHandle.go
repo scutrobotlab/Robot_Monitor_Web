@@ -20,14 +20,6 @@ type currentSerialPortT struct {
 var CurrentSerialPort currentSerialPortT
 var MySerialPort serial.Port
 
-type DataToSerial struct {
-	Board uint8
-	Act   uint8
-	Type  string
-	Addr  uint32
-	Data  float64
-}
-
 func FindSerialPorts() []string {
 	tmp, err := serial.GetPortsList()
 	if err != nil {
