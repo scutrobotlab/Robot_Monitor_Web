@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
+	datapack "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
 
-	"www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/SerialHandle"
+	serialhandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/SerialHandle"
 )
 
 func currentSerialPortWebHandler(w http.ResponseWriter, _ *http.Request) {
@@ -142,7 +142,7 @@ func variableModWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func WebHandleStart() {
+func Start() {
 	jsonWS := make(chan string, 10)
 	go serialhandle.SerialParse(jsonWS)
 	WebSocketHandler := makeWebSocketHandler(jsonWS)
