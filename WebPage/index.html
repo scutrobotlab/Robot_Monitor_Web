@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <div id="variablelist">
-                            <table class="table table-striped">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th>名称</th>
@@ -107,10 +107,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="list in lists">
+                                    <tr v-for="(list,index) in lists">
                                         <td>{{list.Name}}</td>
                                         <td>{{list.Type}}</td>
                                         <td>{{hexdsp(list.Addr)}}</td>
+                                        <td><button type="button" class="close" aria-label="关闭" v-on:click="variabledel(index)">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button></td>
                                     </tr>
                                 </tbody>
                             </table>

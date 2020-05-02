@@ -9,6 +9,38 @@ var appVariableList = new Vue({
     el: '#variablelist',
     data :{
         lists:[]
+    },
+    methods :{
+        variabledel: function(index){
+            axios.post('/variable/del', {
+                Board: 1,
+                Name: appVariableList.lists[index].Name,
+                Type: appVariableList.lists[index].Type,
+                Addr: appVariableList.lists[index].Addr,
+            })
+            .then(function (response) {
+                if (response.data.status==0){
+                    alert('变量删除成功')
+                }else if (response.data.status==22){
+                    alert('变量操作时串口错误')
+                }
+                else if (response.data.status==24){
+                    alert('删除未添加的变量')
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                axios.get('/variable')
+                    .then(function (response) {
+                        appVariableList.lists=response.data.Variables
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            });
+        }
     }
 })
 axios.get('/variable')
