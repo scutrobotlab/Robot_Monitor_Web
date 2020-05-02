@@ -31,9 +31,9 @@ var appSerialBtn = new Vue({
                 })
                 .then(function (response) {
                     if (response.data.status==0){
-                        alert('串口打开成功')
+                        toastShow('串口打开成功',0)
                     }else if (response.data.status==11){
-                        alert('无法打开串口')
+                        toastShow('无法打开串口',1)
                     }
                 })
                 .catch(function (error) {
@@ -44,12 +44,12 @@ var appSerialBtn = new Vue({
             axios.get('/serial/close')
                 .then(function (response) {
                     if (response.data.status==0){
-                        alert('串口关闭成功')
+                        toastShow('串口关闭成功',0)
                     }else if (response.data.status==12){
-                        alert('在未打开串口情况下关闭串口')
+                        toastShow('在未打开串口情况下关闭串口',1)
                     }
                     else if (response.data.status==13){
-                        alert('无法关闭串口')
+                        toastShow('无法关闭串口',1)
                     }
                 })
                 .catch(function (error) {

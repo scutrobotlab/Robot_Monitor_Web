@@ -20,12 +20,12 @@ var appVariableList = new Vue({
             })
             .then(function (response) {
                 if (response.data.status==0){
-                    alert('变量删除成功')
+                    toastShow('变量删除成功',0)
                 }else if (response.data.status==22){
-                    alert('变量操作时串口错误')
+                    toastShow('变量操作时串口错误',1)
                 }
                 else if (response.data.status==24){
-                    alert('删除未添加的变量')
+                    toastShow('删除未添加的变量',1)
                 }
             })
             .catch(function (error) {
@@ -70,12 +70,12 @@ var appVariableAdd = new Vue({
                 })
                 .then(function (response) {
                     if (response.data.status==0){
-                        alert('变量添加成功')
+                        toastShow('变量添加成功',0)
                     }else if (response.data.status==22){
-                        alert('变量操作时串口错误')
+                        toastShow('变量操作时串口错误',1)
                     }
                     else if (response.data.status==23){
-                        alert('重复添加变量')
+                        toastShow('重复添加变量',1)
                     }
                 })
                 .catch(function (error) {
