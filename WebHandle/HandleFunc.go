@@ -160,6 +160,24 @@ func variableModAddWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func variableModDelWebHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	var oldVariable datapack.VariableT
+	postData, _ := ioutil.ReadAll(r.Body)
+	if json.Unmarshal(postData, &oldVariable) == nil {
+		for i, v := range datapack.ModVariables.Variables {
+			if v.Addr == oldVariable.Addr {
+				datapack.ModVariables.Variables = append(datapack.ModVariables.Variables[:i], datapack.ModVariables.Variables[i+1:]...)
+				io.WriteString(w, "{\"status\":0}")
+				return
+			}
+		}
+		io.WriteString(w, "{\"status\":24}")
+		return
+	}
+	io.WriteString(w, "{\"status\":21}")
+}
+
 func variableModListWebHandler(w http.ResponseWriter, _ *http.Request) {
 	b, _ := json.Marshal(datapack.ModVariables)
 	io.WriteString(w, string(b))
@@ -180,6 +198,7 @@ func Start() {
 	http.HandleFunc("/variable/del", variableDelWebHandler)
 	http.HandleFunc("/variable/mod", variableModWebHandler)
 	http.HandleFunc("/variable/modadd", variableModAddWebHandler)
+	http.HandleFunc("/variable/moddel", variableModDelWebHandler)
 	http.HandleFunc("/variable/modlist", variableModListWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	addr := ":8080"

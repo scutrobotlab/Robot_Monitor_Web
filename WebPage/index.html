@@ -70,24 +70,23 @@
                                 </div>
                                 <div class="modal-body">
                                 <form>
-                                    <input type="hidden" id="variable-data" value="0">
                                     <div class="form-group">
                                         <label for="variable-board" class="col-form-label">板子代号</label>
-                                        <input class="form-control" id="variable-board" type="number" value="1">
+                                        <input class="form-control" type="number" value="1"></input>
                                     </div>
                                     <div class="form-group">
                                         <label for="variable-name" class="col-form-label">变量名</label>
-                                        <input class="form-control" id="variable-name" type="text" value="A" v-model="Name"></input>
+                                        <input class="form-control" type="text" value="A" v-model="Name"></input>
                                     </div>
                                     <div class="form-group">
                                         <label for="variable-type" class="col-form-label">变量类型</label>
-                                        <select id="variable-type" class="form-control custom-select d-block" v-model="selected">
+                                        <select class="form-control custom-select d-block" v-model="selected">
                                             <option v-for="type in Types" v-bind:value="type">{{type}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="variable-addr" class="col-form-label">变量地址</label>
-                                        <input class="form-control" id="variable-addr" type="text" value="20004a40" v-model="Addr"></input>
+                                        <input class="form-control" type="text" value="20004a40" v-model="Addr"></input>
                                     </div>
                                 </form>
                                 </div>
@@ -120,7 +119,63 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-write" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                    <div class="tab-pane fade" id="nav-write" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewVariableMod" data-whatever="@getbootstrap">添加变量</button>
+                        <div class="modal fade" id="NewVariableMod" tabindex="-1" role="dialog" aria-labelledby="NewVariableModLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content" id="variablemodadd">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="NewVariableModLabel">添加变量</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="variable-board" class="col-form-label">板子代号</label>
+                                        <input class="form-control" type="number" value="1"></input>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="variable-name" class="col-form-label">变量名</label>
+                                        <input class="form-control" type="text" value="A" v-model="Name"></input>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="variable-type" class="col-form-label">变量类型</label>
+                                        <select class="form-control custom-select d-block" v-model="selected">
+                                            <option v-for="type in Types" v-bind:value="type">{{type}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="variable-addr" class="col-form-label">变量地址</label>
+                                        <input class="form-control" type="text" value="20004a40" v-model="Addr"></input>
+                                    </div>
+                                </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary" v-on:click="variablemodadd">添加</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div id="variablemodlist">
+                            <div v-for="(list,index) in lists">
+                                <div class="input-group">
+                                    <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{list.Name}}</button>
+                                    <div class="dropdown-menu">
+                                    <a class="dropdown-item">{{list.Type}}</a>
+                                    <a class="dropdown-item">{{hexdsp(list.Addr)}}</a>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="Text input" v-model="list.Data">
+                                    <button class="btn btn-outline-primary" type="button" v-on:click="variablemod(index)">修改</button>
+                                    <button type="button" class="close" aria-label="关闭" v-on:click="variablemoddel(index)">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
