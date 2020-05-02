@@ -55,6 +55,15 @@ var appSerialBtn = new Vue({
                 .catch(function (error) {
                     console.log(error);
                 })
+        },
+        refreshserial: function(event){
+            axios.get('/serial/list')
+                .then(function (response) {
+                    appSerialList.serialLists=response.data.Ports
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
         }
     }
 })
