@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
+	datapack "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
 
 	"go.bug.st/serial.v1"
 )
@@ -19,17 +19,19 @@ type currentSerialPortT struct {
 
 var CurrentSerialPort currentSerialPortT
 var MySerialPort serial.Port
+var testPortName = "Test port"
 
 func FindSerialPorts() []string {
+	var ports []string
+	ports = append(ports, testPortName)
+
 	tmp, err := serial.GetPortsList()
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Serial ports errors!")
 	}
 	if len(tmp) == 0 {
 		log.Println("No serial ports found!")
-		return nil
 	}
-	var ports []string
 	for _, port := range tmp {
 		if strings.Contains(port, "USB") || strings.Contains(port, "ACM") || strings.Contains(port, "COM") {
 			ports = append(ports, port)
@@ -42,13 +44,17 @@ func OpenSerialPort(portName string, baudRate int) error {
 	mode := &serial.Mode{
 		BaudRate: baudRate,
 	}
+	if portName == testPortName {
+		MySerialPort = newTestPort()
+		return nil
+	}
 	var err error
 	MySerialPort, err = serial.Open(portName, mode)
 	if err != nil {
 		return err
 	}
-		return nil
-	}
+	return nil
+}
 
 func CloseSerialPort() error {
 	if MySerialPort != nil {
@@ -60,6 +66,7 @@ func CloseSerialPort() error {
 func SerialSend(data []byte) error {
 	_, err := MySerialPort.Write(data)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	return nil
