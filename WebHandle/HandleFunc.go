@@ -142,6 +142,29 @@ func variableModWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func variableModAddWebHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	var newVariable datapack.VariableT
+	postData, _ := ioutil.ReadAll(r.Body)
+	if json.Unmarshal(postData, &newVariable) == nil {
+		for _, v := range datapack.ModVariables.Variables {
+			if v.Addr == newVariable.Addr {
+				io.WriteString(w, "{\"status\":23}")
+				return
+			}
+		}
+		datapack.ModVariables.Variables = append(datapack.ModVariables.Variables, newVariable)
+		io.WriteString(w, "{\"status\":0}")
+	} else {
+		io.WriteString(w, "{\"status\":21}")
+	}
+}
+
+func variableModListWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(datapack.ModVariables)
+	io.WriteString(w, string(b))
+}
+
 func Start() {
 	jsonWS := make(chan string, 10)
 	go serialhandle.SerialParse(jsonWS)
@@ -156,6 +179,8 @@ func Start() {
 	http.HandleFunc("/variable/add", variableAddWebHandler)
 	http.HandleFunc("/variable/del", variableDelWebHandler)
 	http.HandleFunc("/variable/mod", variableModWebHandler)
+	http.HandleFunc("/variable/modadd", variableModAddWebHandler)
+	http.HandleFunc("/variable/modlist", variableModListWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	addr := ":8080"
 	log.Println("Listen on " + addr)

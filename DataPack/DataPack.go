@@ -35,6 +35,7 @@ type jsonCurrentVariablesT struct {
 }
 
 var CurrentVariables jsonCurrentVariablesT
+var ModVariables jsonCurrentVariablesT
 
 type DataToChartT struct {
 	Board uint8
