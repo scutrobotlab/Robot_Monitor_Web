@@ -13,12 +13,11 @@ window.addEventListener("load", function(evt) {
         }
         ws.onmessage = function(evt) {
             var jsonWS = JSON.parse(evt.data);
-            console.log(jsonWS.DataPack[0].Data)
-            var l =  myChart.data.datasets[0].data.length;
-            var d = {'x':l,'y':jsonWS.DataPack[0].Data}
-            myChart.data.labels.push(l)
-            myChart.data.datasets[0].data.push(d)
-            myChart.update()
+            console.log(jsonWS.DataPack[0].Data);
+            var l = chartData.length;
+            var d = {'x':l,'y':jsonWS.DataPack[0].Data};
+            chartData.push(d);
+            chart.update();
         }
         ws.onerror = function(evt) {
             print("ERROR: " + evt.data);
