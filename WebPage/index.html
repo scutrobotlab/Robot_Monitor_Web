@@ -50,7 +50,7 @@
                         <button type="button" class="btn btn-danger" id="closeWS">停止</button>
                         <div class="modal fade" id="NewVariable" tabindex="-1" role="dialog" aria-labelledby="NewVariableLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
-                            <div class="modal-content">
+                            <div class="modal-content" id="variableadd">
                                 <div class="modal-header">
                                 <h5 class="modal-title" id="NewVariableLabel">添加变量</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -66,25 +66,43 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="variable-name" class="col-form-label">变量名</label>
-                                        <input class="form-control" id="variable-name" type="text" value="A"></input>
+                                        <input class="form-control" id="variable-name" type="text" value="A" v-model="Name"></input>
                                     </div>
                                     <div class="form-group">
                                         <label for="variable-type" class="col-form-label">变量类型</label>
-                                        <input class="form-control" id="variable-type" type="text" value="float"></input>
+                                        <select id="variable-type" class="form-control custom-select d-block" v-model="selected">
+                                            <option v-for="type in Types" v-bind:value="type">{{type}}</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="variable-addr" class="col-form-label">变量地址</label>
-                                        <input class="form-control" id="variable-addr" type="text" value="20004a40"></input>
+                                        <input class="form-control" id="variable-addr" type="text" value="20004a40" v-model="Addr"></input>
                                     </div>
                                 </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                    <button type="button" class="btn btn-primary" id="sendserial">添加</button>
+                                    <button type="button" class="btn btn-primary" v-on:click="variableadd">添加</button>
                                 </div>
                             </div>
                             </div>
                         </div>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>类型</th>
+                                    <th>地址</th>
+                                </tr>
+                            </thead>
+                            <tbody id="variablelist" v-for="list in lists">
+                                <tr>
+                                    <td>{{list.Name}}</td>
+                                    <td>{{list.Type}}</td>
+                                    <td>{{hexdsp(list.Addr)}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="tab-pane fade" id="nav-write" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
                 </div>
@@ -97,5 +115,6 @@
     </div>
     <script src="/assets/js/websocket.js"></script>
     <script src="/assets/js/serial.js"></script>
+    <script src="/assets/js/variable.js"></script>
 </body>
 </html>
