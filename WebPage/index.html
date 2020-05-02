@@ -97,22 +97,24 @@
                             </div>
                             </div>
                         </div>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>名称</th>
-                                    <th>类型</th>
-                                    <th>地址</th>
-                                </tr>
-                            </thead>
-                            <tbody id="variablelist" v-for="list in lists">
-                                <tr>
-                                    <td>{{list.Name}}</td>
-                                    <td>{{list.Type}}</td>
-                                    <td>{{hexdsp(list.Addr)}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div id="variablelist">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>名称</th>
+                                        <th>类型</th>
+                                        <th>地址</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="list in lists">
+                                        <td>{{list.Name}}</td>
+                                        <td>{{list.Type}}</td>
+                                        <td>{{hexdsp(list.Addr)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="nav-write" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
                 </div>
