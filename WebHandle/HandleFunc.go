@@ -187,7 +187,6 @@ func Start() {
 	jsonWS := make(chan string, 10)
 	go serialhandle.SerialParse(jsonWS)
 	WebSocketHandler := makeWebSocketHandler(jsonWS)
-	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
 	http.HandleFunc("/serial", currentSerialPortWebHandler)
 	http.HandleFunc("/serial/list", listSerialPortsWebHandler)
 	http.HandleFunc("/serial/open", openSerialPortWebHandler)
