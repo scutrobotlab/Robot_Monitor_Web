@@ -9,6 +9,6 @@ import (
 
 func main() {
 	defer serialhandle.CloseSerialPort()
-	http.Handle("/", http.FileServer(assetFS()))
+	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
 	webhandle.Start()
 }
