@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -183,6 +184,26 @@ func variableModListWebHandler(w http.ResponseWriter, _ *http.Request) {
 	io.WriteString(w, string(b))
 }
 
+func fileUploadWebHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	r.ParseMultipartForm(32 << 20)
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		io.WriteString(w, "{\"status\":31}")
+		return
+	}
+	defer file.Close()
+	os.Remove("DataAddr")
+	f, err := os.OpenFile("DataAddr", os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		io.WriteString(w, "{\"status\":32}")
+		return
+	}
+	defer f.Close()
+	io.Copy(f, file)
+	io.WriteString(w, "{\"status\":0}")
+}
+
 func Start() {
 	jsonWS := make(chan string, 10)
 	go serialhandle.SerialParse(jsonWS)
@@ -199,6 +220,7 @@ func Start() {
 	http.HandleFunc("/variable/modadd", variableModAddWebHandler)
 	http.HandleFunc("/variable/moddel", variableModDelWebHandler)
 	http.HandleFunc("/variable/modlist", variableModListWebHandler)
+	http.HandleFunc("/file/upload", fileUploadWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	addr := ":8080"
 	log.Println("Listen on " + addr)

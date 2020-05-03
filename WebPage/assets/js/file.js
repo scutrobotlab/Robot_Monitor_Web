@@ -10,13 +10,18 @@ var appFileUpload = new Vue({
         upload: function(event){
             let param = new FormData();
             param.append('file',appFileUpload.file);
-            console.log(param.get('file')); 
             let config = {
                 headers:{'Content-Type':'multipart/form-data'}
             };
             axios.post('/file/upload',param,config)
                 .then(response=>{
-                    console.log(response.data);
+                    if (response.data.status==0){
+                        toastShow('文件上传成功',0)
+                    }else if (response.data.status==31){
+                        toastShow('未选择文件',1)
+                    }else if (response.data.status==32){
+                        toastShow('文件写入错误',1)
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
