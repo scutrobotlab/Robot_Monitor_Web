@@ -206,6 +206,11 @@ func fileUploadWebHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "{\"status\":0}")
 }
 
+func fileVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(filehandle.ProjectVariables)
+	io.WriteString(w, string(b))
+}
+
 func Start() {
 	jsonWS := make(chan string, 10)
 	go serialhandle.SerialParse(jsonWS)
@@ -223,6 +228,7 @@ func Start() {
 	http.HandleFunc("/variable/moddel", variableModDelWebHandler)
 	http.HandleFunc("/variable/modlist", variableModListWebHandler)
 	http.HandleFunc("/file/upload", fileUploadWebHandler)
+	http.HandleFunc("/file/variables", fileVariablesWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	addr := ":8080"
 	log.Println("Listen on " + addr)

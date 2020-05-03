@@ -8,18 +8,18 @@ import (
 	"regexp"
 )
 
-type VariableT struct {
+type projectVariablesT struct {
 	Addr string
 	Size string
 	Name string
 	Type string
 }
 
-type jsonSaveVariables struct {
-	Variables []VariableT
+type jsonProjectVariables struct {
+	Variables []projectVariablesT
 }
 
-var SaveVariables jsonSaveVariables
+var ProjectVariables jsonProjectVariables
 
 func Txt2json() error {
 	file, err := os.Open("DataAddr")
@@ -36,9 +36,9 @@ func Txt2json() error {
 	reg := regexp.MustCompile(`(0x[0-9a-f]{8})\s{2}(0x[0-9a-f]+)\s+((\*\s)?[a-zA-Z0-9_\.]+)\s+([a-zA-Z0-9_\.\s]+?)[\n|\r]`)
 	match := reg.FindAllStringSubmatch(string(content), -1)
 	for _, v := range match {
-		SaveVariables.Variables = append(SaveVariables.Variables, VariableT{Addr: v[1], Size: v[2], Name: v[3], Type: v[5]})
+		ProjectVariables.Variables = append(ProjectVariables.Variables, projectVariablesT{Addr: v[1], Size: v[2], Name: v[3], Type: v[5]})
 	}
-	jsonTxt, err := json.Marshal(SaveVariables)
+	jsonTxt, err := json.Marshal(ProjectVariables)
 	if err != nil {
 		log.Fatal(err)
 		return err
