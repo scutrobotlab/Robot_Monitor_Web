@@ -34,7 +34,7 @@
 
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-serialport-tab" data-toggle="tab" href="#nav-serialport" role="tab" aria-controls="nav-home" aria-selected="true">串口</a>
+                        <a class="nav-item nav-link active" id="nav-serialport-tab" data-toggle="tab" href="#nav-serialport" role="tab" aria-controls="nav-home" aria-selected="true">开始</a>
                         <a class="nav-item nav-link" id="nav-read-tab" data-toggle="tab" href="#nav-read" role="tab" aria-controls="nav-profile" aria-selected="false">观察</a>
                         <a class="nav-item nav-link" id="nav-write-tab" data-toggle="tab" href="#nav-write" role="tab" aria-controls="nav-contact" aria-selected="false">修改</a>
                     </div>
@@ -42,18 +42,27 @@
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-serialport" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <p>
-                        <div class="row">
-                            串口：
-                            <select id="serialport" class="serialport custom-select d-block" v-model="selected">
+                        <p><div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <label class="input-group-text">串口：</label>
+                            </div>
+                            <select id="serialport" class="custom-select" v-model="selected">
                                 <option v-for="serialList in serialLists" v-bind:value="serialList">{{serialList}}</option>
                             </select>
-                        </div>
-                        </p>
+                        </div></p>
                         <div id="serialbtn">
                             <p><button class="btn btn-primary" v-on:click="refreshserial">刷新串口</button></p>
                             <p><button class="btn btn-primary" v-on:click="openserial">打开串口</button></p>
                             <p><button class="btn btn-danger" v-on:click="closeserial">关闭串口</button></p>
+                        </div>
+                        <div class="input-group" id="fileupload">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-primary" v-on:click="upload">上传</button>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" @change="choose($event)">
+                                <label class="custom-file-label">{{file.name}}</label>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-read" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -186,6 +195,7 @@
         </div>
     </div>
     <script src="/assets/js/toast.js"></script>
+    <script src="/assets/js/file.js"></script>
     <script src="/assets/js/serial.js"></script>
     <script src="/assets/js/variable.js"></script>
     <script src="/assets/js/chart.js"></script>
