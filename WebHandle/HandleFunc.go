@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	datapack "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
+	filehandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/FileHandle"
 
 	serialhandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/SerialHandle"
 )
@@ -201,6 +202,7 @@ func fileUploadWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 	io.Copy(f, file)
+	filehandle.Txt2json()
 	io.WriteString(w, "{\"status\":0}")
 }
 
