@@ -1,3 +1,11 @@
+axios.get('/file/variables')
+    .then(function (response) {
+        appFileVariables.lists=response.data.Variables
+    })
+    .catch(function (error) {
+        console.log(error);
+    })
+
 var appFileUpload = new Vue({
     el: '#fileupload',
     data :{
@@ -40,9 +48,20 @@ var appFileUpload = new Vue({
 var appFileVariables = new Vue({
     el: '#filevariables',
     data :{
-        lists:[]
+        lists:[],
+        keyword:''
     },
     methods :{
+        search: function(event){
+            var keyword = this.keyword
+            if (keyword) {
+                this.lists = this.lists.filter(function(lists) {
+                    return Object.keys(lists).some(function(key) {
+                        return String(lists[key]).toLowerCase().indexOf(keyword) > -1
+                    })
+                })
+            }
+        },
         variableadd: function(index){
             axios.post('/variable/add', {
                     Board: 1,
@@ -102,6 +121,6 @@ var appFileVariables = new Vue({
                             console.log(error);
                         })
                 });
-            }
+        }
     }
 })
