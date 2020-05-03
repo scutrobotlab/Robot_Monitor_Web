@@ -43,12 +43,12 @@ var appFileVariables = new Vue({
         lists:[]
     },
     methods :{
-        variableadd: function(event){
+        variableadd: function(index){
             axios.post('/variable/add', {
                     Board: 1,
-                    Name: appFileVariables.Name,
-                    Type: appFileVariables.Type,
-                    Addr: parseInt(appFileVariables.Addr.slice(2),16),
+                    Name: appFileVariables.lists[index].Name,
+                    Type: appFileVariables.lists[index].Type,
+                    Addr: parseInt(appFileVariables.lists[index].Addr.slice(2),16),
                 })
                 .then(function (response) {
                     if (response.data.status==0){
@@ -73,12 +73,12 @@ var appFileVariables = new Vue({
                         })
                 });
         },
-        variablemodadd: function(event){
+        variablemodadd: function(index){
             axios.post('/variable/modadd', {
                     Board: 1,
-                    Name: appFileVariables.Name,
-                    Type: appFileVariables.Type,
-                    Addr: parseInt(appFileVariables.Addr.slice(2),16),
+                    Name: appFileVariables.lists[index].Name,
+                    Type: appFileVariables.lists[index].Type,
+                    Addr: parseInt(appFileVariables.lists[index].Addr.slice(2),16),
                 })
                 .then(function (response) {
                     if (response.data.status==0){

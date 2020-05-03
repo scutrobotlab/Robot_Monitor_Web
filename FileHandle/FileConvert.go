@@ -43,6 +43,7 @@ func Txt2json() error {
 		log.Fatal(err)
 		return err
 	}
+	os.Remove("DataAddr.json")
 	f, err := os.OpenFile("DataAddr.json", os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatal(err)
