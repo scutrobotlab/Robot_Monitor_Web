@@ -213,7 +213,7 @@ func fileVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
 
 func Start() {
 	jsonWS := make(chan string, 10)
-	go serialhandle.SerialParse(jsonWS)
+	go serialhandle.SerialThread(jsonWS)
 	WebSocketHandler := makeWebSocketHandler(jsonWS)
 	http.HandleFunc("/serial", currentSerialPortWebHandler)
 	http.HandleFunc("/serial/list", listSerialPortsWebHandler)

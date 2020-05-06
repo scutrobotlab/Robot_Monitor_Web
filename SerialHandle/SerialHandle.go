@@ -73,7 +73,7 @@ func SerialSend(data []byte) error {
 }
 
 func SerialReceive() ([]byte, error) {
-	buff := make([]byte, 160)
+	buff := make([]byte, 200)
 	n, err := MySerialPort.Read(buff)
 	if err != nil {
 		return nil, err
@@ -103,62 +103,92 @@ func SerialSendCmd(act uint8, variable datapack.VariableT) error {
 	return errors.New("No serial port")
 }
 
-func SerialParse(jsonString chan string) {
-	var b []byte
+func verifyBuff(buff []byte) (int, []byte) {
+	log.Println(buff)
+	if len(buff) < 19 {
+		log.Println("Data pack too short")
+		return 0, nil
+	}
+	if buff[0] == datapack.BOARD_1 && buff[1] == datapack.ACT_SUBSCRIBERETURN && len(buff)%20 == 0 {
+		return len(buff) / 20, buff
+	}
+	b1 := buff[:]
+	b2 := buff[:]
+	for i, v := range buff {
+		if v == datapack.BOARD_1 && len(buff[i:]) > 19 && buff[i+1] == datapack.ACT_SUBSCRIBERETURN {
+			b1 = b1[i:]
+			break
+		}
+	}
+	for i := len(b1) - 1; i > 18; i-- {
+		if b1[i] == 10 {
+			b2 = b1[:i+1]
+			if len(b2)%20 == 0 {
+				log.Println("Get!")
+				return len(b2) / 20, b2
+			}
+			b2 = b1[:]
+		}
+	}
+	log.Println("Cannot verify data pack")
+	return 0, nil
+}
+
+func praseBuff(raw []byte) []byte {
+	var chartPack datapack.DataToChart
+	var chartData datapack.DataToChartT
+	packNum, buff := verifyBuff(raw)
+	for i := 0; i < packNum; i++ {
+		chartData.Board = buff[i*20]
+		chartData.Tick = datapack.BytesToUint32(buff[i*20+15 : i*20+19])
+		addr := datapack.BytesToUint32(buff[i*20+3 : i*20+7])
+		for _, v := range datapack.CurrentVariables.Variables {
+			if v.Addr == addr {
+				chartData.Name = v.Name
+				switch v.Type {
+				case "uint8_t":
+					chartData.Data = float64(datapack.BytesToUint8(buff[i*20+7 : i*20+15]))
+				case "uint20_t":
+					chartData.Data = float64(datapack.BytesToUint16(buff[i*20+7 : i*20+15]))
+				case "uint32_t":
+					chartData.Data = float64(datapack.BytesToUint32(buff[i*20+7 : i*20+15]))
+				case "uint64_t":
+					chartData.Data = float64(datapack.BytesToUint64(buff[i*20+7 : i*20+15]))
+				case "int8_t":
+					chartData.Data = float64(datapack.BytesToInt8(buff[i*20+7 : i*20+15]))
+				case "int20_t":
+					chartData.Data = float64(datapack.BytesToInt16(buff[i*20+7 : i*20+15]))
+				case "int32_t", "int":
+					chartData.Data = float64(datapack.BytesToInt32(buff[i*20+7 : i*20+15]))
+				case "int64_t":
+					chartData.Data = float64(datapack.BytesToInt64(buff[i*20+7 : i*20+15]))
+				case "float":
+					chartData.Data = float64(datapack.BytesToFloat32(buff[i*20+7 : i*20+15]))
+				case "double":
+					chartData.Data = float64(datapack.BytesToFloat64(buff[i*20+7 : i*20+15]))
+				default:
+					chartData.Data = 0
+				}
+			}
+		}
+		chartPack.DataPack = append(chartPack.DataPack, chartData)
+		b, err := json.Marshal(chartPack)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		return b
+	}
+	return nil
+}
+
+func SerialThread(jsonString chan string) {
 	for {
 		if MySerialPort != nil && CurrentSerialPort.Name != "" {
-			var chartPack datapack.DataToChart
-			var chartData datapack.DataToChartT
 			buff, err := SerialReceive()
 			if err != nil {
 				log.Println("Fail: Can't receive serial data")
 			}
-			if len(buff)%16 != 0 {
-				log.Println("Invalid data length")
-			}
-			packNum := len(buff) / 16
-			for i := 0; i < packNum; i++ {
-				if buff[i*16+1] == datapack.ACT_SUBSCRIBERETURN {
-					chartData.Board = buff[i*16]
-					addr := datapack.BytesToUint32(buff[i*16+3 : i*16+7])
-					for _, v := range datapack.CurrentVariables.Variables {
-						if v.Addr == addr {
-							chartData.Name = v.Name
-							switch v.Type {
-							case "uint8_t":
-								chartData.Data = float64(datapack.BytesToUint8(buff[i*16+7 : i*16+15]))
-							case "uint16_t":
-								chartData.Data = float64(datapack.BytesToUint16(buff[i*16+7 : i*16+15]))
-							case "uint32_t":
-								chartData.Data = float64(datapack.BytesToUint32(buff[i*16+7 : i*16+15]))
-							case "uint64_t":
-								chartData.Data = float64(datapack.BytesToUint64(buff[i*16+7 : i*16+15]))
-							case "int8_t":
-								chartData.Data = float64(datapack.BytesToInt8(buff[i*16+7 : i*16+15]))
-							case "int16_t":
-								chartData.Data = float64(datapack.BytesToInt16(buff[i*16+7 : i*16+15]))
-							case "int32_t", "int":
-								chartData.Data = float64(datapack.BytesToInt32(buff[i*16+7 : i*16+15]))
-							case "int64_t":
-								chartData.Data = float64(datapack.BytesToInt64(buff[i*16+7 : i*16+15]))
-							case "float":
-								chartData.Data = float64(datapack.BytesToFloat32(buff[i*16+7 : i*16+15]))
-							case "double":
-								chartData.Data = float64(datapack.BytesToFloat64(buff[i*16+7 : i*16+15]))
-							default:
-								chartData.Data = 0
-							}
-						}
-					}
-					chartPack.DataPack = append(chartPack.DataPack, chartData)
-					b, err = json.Marshal(chartPack)
-					if err != nil {
-						log.Fatalln(err)
-					}
-				} else {
-					log.Println("Invalid data pack")
-				}
-			}
+			b := praseBuff(buff)
 			jsonString <- string(b)
 		}
 		time.Sleep(9 * time.Millisecond)

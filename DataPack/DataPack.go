@@ -14,6 +14,13 @@ const (
 	ACT_WRITERETURN
 )
 
+const (
+	_ = iota
+	BOARD_1
+	BOARD_2
+	BOARD_3
+)
+
 var TypeLen = map[string]int{
 	"uint8_t":  1,
 	"uint16_t": 2,
@@ -34,6 +41,7 @@ type VariableT struct {
 	Type  string
 	Addr  uint32
 	Data  float64
+	Tick  uint32
 }
 
 type jsonCurrentVariablesT struct {
@@ -47,6 +55,7 @@ type DataToChartT struct {
 	Board uint8
 	Name  string
 	Data  float64
+	Tick  uint32
 }
 
 type DataToChart struct {

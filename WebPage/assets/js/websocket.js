@@ -1,5 +1,6 @@
 window.addEventListener("load", function(evt) {
     var ws;
+    var tickoffset = 0;
     $("#openWS").click (function(event){
         if (ws) {
             return false;
@@ -13,7 +14,7 @@ window.addEventListener("load", function(evt) {
         }
         ws.onmessage = function(evt) {
             var jsonWS = JSON.parse(evt.data);
-            var l = chartData.length;
+            l = tickoffset==0?jsonWS.DataPack[0].Tick:jsonWS.DataPack[0].Tick-tickoffset;
             var d = {'x':l,'y':jsonWS.DataPack[0].Data};
             chartData.push(d);
             chart.update();
