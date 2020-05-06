@@ -118,7 +118,7 @@ func SerialParse(jsonString chan string) {
 			}
 			packNum := len(buff) / 16
 			for i := 0; i < packNum; i++ {
-				if buff[i*16+1] == 2 {
+				if buff[i*16+1] == datapack.ACT_SUBSCRIBERETURN {
 					chartData.Board = buff[i*16]
 					addr := datapack.BytesToUint32(buff[i*16+3 : i*16+7])
 					for _, v := range datapack.CurrentVariables.Variables {

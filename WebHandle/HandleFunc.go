@@ -96,7 +96,7 @@ func variableAddWebHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-		if serialhandle.SerialSendCmd(datapack.ACT_READ, newVariable) != nil {
+		if serialhandle.SerialSendCmd(datapack.ACT_SUBSCRIBE, newVariable) != nil {
 			io.WriteString(w, "{\"status\":22}")
 		} else {
 			datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables, newVariable)
@@ -114,7 +114,7 @@ func variableDelWebHandler(w http.ResponseWriter, r *http.Request) {
 	if json.Unmarshal(postData, &oldVariable) == nil {
 		for i, v := range datapack.CurrentVariables.Variables {
 			if v.Addr == oldVariable.Addr {
-				if serialhandle.SerialSendCmd(datapack.ACT_UNREAD, oldVariable) != nil {
+				if serialhandle.SerialSendCmd(datapack.ACT_UNSUBSCRIBE, oldVariable) != nil {
 					io.WriteString(w, "{\"status\":22}")
 				} else {
 					datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables[:i], datapack.CurrentVariables.Variables[i+1:]...)

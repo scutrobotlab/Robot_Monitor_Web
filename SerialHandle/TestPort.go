@@ -1,24 +1,25 @@
 package serialhandle
 
 import (
+	"errors"
 	"log"
 	"math"
 	"time"
-	"errors"
+
 	"go.bug.st/serial.v1"
 
-	"www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
+	datapack "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
 )
 
 type testPort struct {
 	readingAddresses []uint32
-	createdTime time.Time
+	createdTime      time.Time
 }
 
 func newTestPort() serial.Port {
 	return &testPort{
 		readingAddresses: []uint32{},
-		createdTime: time.Now(),
+		createdTime:      time.Now(),
 	}
 }
 
@@ -26,16 +27,16 @@ func (tp *testPort) SetMode(mode *serial.Mode) error { return nil }
 
 func testValue(x float64, addr uint32) float64 {
 	waveform := addr >> 24
-	freq := (float64((addr >> 8) & 0xFF) - 0x80) / 16.0
+	freq := (float64((addr>>8)&0xFF) - 0x80) / 16.0
 	freq = math.Exp(freq)
-	phase := float64(addr & 0xFF) / 0xFF
-	amplitude := float64((addr >> 16) & 0xFF) / 16.0
+	phase := float64(addr&0xFF) / 0xFF
+	amplitude := float64((addr>>16)&0xFF) / 16.0
 	amplitude = math.Exp(amplitude)
-	currentPhase := x * freq + phase
+	currentPhase := x*freq + phase
 	var scale float64
 	switch waveform {
 	case 1: // square
-		if currentPhase - math.Floor(currentPhase) < 0.5 {
+		if currentPhase-math.Floor(currentPhase) < 0.5 {
 			scale = 1.0
 		} else {
 			scale = -1.0
@@ -58,7 +59,7 @@ func (tp *testPort) Read(p []byte) (n int, err error) {
 	}
 
 	for i, addr := range addresses {
-		s := p[16 * i: 16 * (i+1)]
+		s := p[16*i : 16*(i+1)]
 		s[0] = 1 // board
 		s[1] = 2 // ???
 		s[2] = 8 // typeLen
@@ -72,22 +73,30 @@ func (tp *testPort) Read(p []byte) (n int, err error) {
 }
 
 func (tp *testPort) Write(p []byte) (n int, err error) {
-	if len(p) != 16 { return 0, errors.New("Invalid len") }
-	if p[len(p) - 1] != '\n' { return 0, errors.New("Invalid package") }
+	if len(p) != 16 {
+		return 0, errors.New("Invalid len")
+	}
+	if p[len(p)-1] != '\n' {
+		return 0, errors.New("Invalid package")
+	}
 
 	board := p[0]
-	if board != 1 { return 0, errors.New("Invalid board") }
+	if board != 1 {
+		return 0, errors.New("Invalid board")
+	}
 	act := p[1]
 	typeLen := p[2]
-	if typeLen != 8 { return 0, errors.New("Unsupported typeLen") }
+	if typeLen != 8 {
+		return 0, errors.New("Unsupported typeLen")
+	}
 	address := datapack.BytesToUint32(p[3:7])
 
 	switch act {
-	case datapack.ACT_READ:
+	case datapack.ACT_SUBSCRIBE:
 		tp.readingAddresses = append(tp.readingAddresses, address)
 		log.Printf("Adding address: %08X\n", address)
 		break
-	case datapack.ACT_UNREAD:
+	case datapack.ACT_UNSUBSCRIBE:
 		var newAddresses []uint32
 		for _, addr := range tp.readingAddresses {
 			if addr != address {
@@ -111,6 +120,8 @@ func (tp *testPort) SetDTR(dtr bool) error { return errors.New("Not supported") 
 
 func (tp *testPort) SetRTS(rts bool) error { return errors.New("Not supported") }
 
-func (tp *testPort) GetModemStatusBits() (*serial.ModemStatusBits, error) { return nil, errors.New("Not supported") }
+func (tp *testPort) GetModemStatusBits() (*serial.ModemStatusBits, error) {
+	return nil, errors.New("Not supported")
+}
 
 func (tp *testPort) Close() error { return nil }
