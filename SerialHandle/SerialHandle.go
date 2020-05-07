@@ -104,7 +104,6 @@ func SerialSendCmd(act uint8, variable datapack.VariableT) error {
 }
 
 func verifyBuff(buff []byte) (int, []byte) {
-	log.Println(buff)
 	if len(buff) < 19 {
 		log.Println("Data pack too short")
 		return 0, nil

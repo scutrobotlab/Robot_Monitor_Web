@@ -53,13 +53,13 @@ func testValue(x float64, addr uint32) float64 {
 
 func (tp *testPort) Read(p []byte) (n int, err error) {
 	addresses := tp.readingAddresses
-	maxNumPack := len(p) / 16
+	maxNumPack := len(p) / 20
 	if len(addresses) > maxNumPack {
 		addresses = addresses[:maxNumPack]
 	}
 
 	for i, addr := range addresses {
-		s := p[16*i : 16*(i+1)]
+		s := p[20*i : 20*(i+1)]
 		s[0] = 1 // board
 		s[1] = 2 // ???
 		s[2] = 8 // typeLen
@@ -67,9 +67,10 @@ func (tp *testPort) Read(p []byte) (n int, err error) {
 		x := time.Now().Sub(tp.createdTime).Seconds()
 		y := testValue(x, addr)
 		copy(s[7:15], datapack.AnyToBytes(y))
-		s[15] = '\n'
+		copy(s[15:19], datapack.AnyToBytes(uint32(x)))
+		s[19] = '\n'
 	}
-	return len(addresses) * 16, nil
+	return len(addresses) * 20, nil
 }
 
 func (tp *testPort) Write(p []byte) (n int, err error) {
