@@ -1,6 +1,6 @@
 # 上位机 · 网页版
 
-[![Build Status](https://drone.scut-robotlab.cn/api/badges/M3chD09/Robot_Monitor_Web/status.svg)](https://drone.scut-robotlab.cn/M3chD09/Robot_Monitor_Web)
+![Go](https://github.com/scutrobotlab/Robot_Monitor_Web/workflows/Go/badge.svg) ![Upload Release Asset](https://github.com/scutrobotlab/Robot_Monitor_Web/workflows/Upload%20Release%20Asset/badge.svg)
 
 >~~你所用过坠好的上位机~~  
 >~~简洁、优雅且好用~~  
