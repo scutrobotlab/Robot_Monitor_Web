@@ -1,7 +1,6 @@
 package filehandle
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
@@ -39,18 +38,6 @@ func Txt2json() error {
 	for _, v := range match {
 		ProjectVariables.Variables = append(ProjectVariables.Variables, projectVariablesT{Addr: v[1], Size: v[2], Name: v[3], Type: v[5]})
 	}
-	jsonTxt, err := json.Marshal(ProjectVariables)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	os.Remove("DataAddr.json")
-	f, err := os.OpenFile("DataAddr.json", os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	defer f.Close()
-	f.Write(jsonTxt)
+	jsonSave("DataAddr.json", ProjectVariables)
 	return nil
 }

@@ -3,3 +3,5 @@
 WebPageBuild
 bindata_assetfs.go
 DataAddr*
+VariablesToRead.json
+VariablesToMod.json
