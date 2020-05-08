@@ -53,6 +53,10 @@ func OpenSerialPort(portName string, baudRate int) error {
 	if err != nil {
 		return err
 	}
+	for _, v := range datapack.CurrentVariables.Variables {
+		SerialSendCmd(datapack.ACT_SUBSCRIBE, v)
+		time.Sleep(10 * time.Millisecond)
+	}
 	return nil
 }
 
