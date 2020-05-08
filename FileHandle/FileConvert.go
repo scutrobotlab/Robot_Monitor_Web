@@ -3,7 +3,6 @@ package filehandle
 import (
 	"io/ioutil"
 	"log"
-	"os"
 	"regexp"
 )
 
@@ -21,15 +20,9 @@ type jsonProjectVariables struct {
 var ProjectVariables jsonProjectVariables
 
 func Txt2json() error {
-	file, err := os.Open("DataAddr")
+	content, err := ioutil.ReadFile("DataAddr")
 	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	defer file.Close()
-	content, err := ioutil.ReadAll(file)
-	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	reg := regexp.MustCompile(`(0x[0-9a-f]{8})\s{2}(0x[0-9a-f]+)\s+((\*\s)?[a-zA-Z0-9_\.]+)\s+([a-zA-Z0-9_\.\s]+?)[\n|\r]`)
