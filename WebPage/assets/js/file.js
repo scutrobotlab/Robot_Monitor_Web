@@ -36,6 +36,8 @@ var appFileUpload = new Vue({
                         toastShow('未选择文件',1)
                     }else if (response.data.status==32){
                         toastShow('文件写入错误',1)
+                    }else if (response.data.status==33){
+                        toastShow('文件转换错误',1)
                     }
                 })
                 .catch(function (error) {

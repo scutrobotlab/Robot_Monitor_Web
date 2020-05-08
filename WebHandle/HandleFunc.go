@@ -202,7 +202,11 @@ func fileUploadWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 	io.Copy(f, file)
-	filehandle.Txt2json()
+	err = filehandle.Txt2json()
+	if err != nil {
+		io.WriteString(w, "{\"status\":33}")
+		return
+	}
 	io.WriteString(w, "{\"status\":0}")
 }
 
