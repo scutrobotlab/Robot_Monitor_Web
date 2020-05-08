@@ -31,6 +31,8 @@ func Txt2json() error {
 	for _, v := range match {
 		ProjectVariables.Variables = append(ProjectVariables.Variables, projectVariablesT{Addr: v[1], Size: v[2], Name: v[3], Type: v[5]})
 	}
-	jsonSave("DataAddr.json", ProjectVariables)
+	if Config.IsSaveDataAddr {
+		jsonSave("DataAddr.json", ProjectVariables)
+	}
 	return nil
 }

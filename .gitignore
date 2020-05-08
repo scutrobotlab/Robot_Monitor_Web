@@ -5,3 +5,4 @@ bindata_assetfs.go
 DataAddr*
 VariablesToRead.json
 VariablesToMod.json
+Config.json

@@ -13,6 +13,7 @@ import (
 )
 
 func main() {
+	filehandle.LoadSaves()
 	c := make(chan os.Signal)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	go func() {
@@ -33,7 +34,6 @@ func main() {
 			filehandle.SaveAll()
 		}
 	}()
-	filehandle.LoadSaves()
 	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
 	webhandle.Start()
 }

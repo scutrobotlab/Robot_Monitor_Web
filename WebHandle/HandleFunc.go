@@ -187,6 +187,7 @@ func variableModListWebHandler(w http.ResponseWriter, _ *http.Request) {
 
 func fileUploadWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
+	defer os.Remove("DataAddr")
 	r.ParseMultipartForm(32 << 20)
 	file, _, err := r.FormFile("file")
 	if err != nil {
@@ -194,7 +195,6 @@ func fileUploadWebHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
-	os.Remove("DataAddr")
 	f, err := os.OpenFile("DataAddr", os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		io.WriteString(w, "{\"status\":32}")
@@ -215,6 +215,28 @@ func fileVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
 	io.WriteString(w, string(b))
 }
 
+func fileConfigWebHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	r.ParseForm()
+	if len(r.Form) == 0 {
+		b, _ := json.Marshal(filehandle.Config)
+		io.WriteString(w, string(b))
+	} else {
+		if _, ok := r.Form["sda"]; ok {
+			filehandle.Config.IsSaveDataAddr, _ = strconv.ParseBool(strings.Join(r.Form["sda"], ""))
+		}
+		if _, ok := r.Form["svm"]; ok {
+			filehandle.Config.IsSaveVariablesToMod, _ = strconv.ParseBool(strings.Join(r.Form["svm"], ""))
+		}
+		if _, ok := r.Form["svr"]; ok {
+			filehandle.Config.IsSaveVariablesToRead, _ = strconv.ParseBool(strings.Join(r.Form["svr"], ""))
+		}
+		filehandle.SaveConfig()
+		io.WriteString(w, "{\"status\":0}")
+	}
+
+}
+
 func Start() {
 	jsonWS := make(chan string, 10)
 	go serialhandle.SerialThread(jsonWS)
@@ -233,6 +255,7 @@ func Start() {
 	http.HandleFunc("/variable/modlist", variableModListWebHandler)
 	http.HandleFunc("/file/upload", fileUploadWebHandler)
 	http.HandleFunc("/file/variables", fileVariablesWebHandler)
+	http.HandleFunc("/file/config", fileConfigWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 	addr := ":8080"
 	log.Println("Listen on " + addr)

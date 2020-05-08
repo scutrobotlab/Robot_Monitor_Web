@@ -38,12 +38,24 @@ func jsonSave(filename string, v interface{}) {
 }
 
 func SaveAll() {
-	jsonSave("VariablesToRead.json", datapack.CurrentVariables)
-	jsonSave("VariablesToMod.json", datapack.ModVariables)
+	SaveConfig()
+	if Config.IsSaveVariablesToMod {
+		jsonSave("VariablesToMod.json", datapack.ModVariables)
+	}
+	if Config.IsSaveVariablesToRead {
+		jsonSave("VariablesToRead.json", datapack.CurrentVariables)
+	}
 }
 
 func LoadSaves() {
-	jsonLoad("DataAddr.json", &ProjectVariables)
-	jsonLoad("VariablesToRead.json", &datapack.CurrentVariables)
-	jsonLoad("VariablesToMod.json", &datapack.ModVariables)
+	LoadConfig()
+	if Config.IsSaveDataAddr {
+		jsonLoad("DataAddr.json", &ProjectVariables)
+	}
+	if Config.IsSaveVariablesToMod {
+		jsonLoad("VariablesToMod.json", &datapack.ModVariables)
+	}
+	if Config.IsSaveVariablesToRead {
+		jsonLoad("VariablesToRead.json", &datapack.CurrentVariables)
+	}
 }
