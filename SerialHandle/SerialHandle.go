@@ -21,6 +21,9 @@ var CurrentSerialPort currentSerialPortT
 var MySerialPort serial.Port
 var testPortName = "Test port"
 
+var chOpen = make(chan int)
+var chClose = make(chan int)
+
 func FindSerialPorts() []string {
 	var ports []string
 	ports = append(ports, testPortName)
@@ -53,16 +56,18 @@ func OpenSerialPort(portName string, baudRate int) error {
 	if err != nil {
 		return err
 	}
-	for _, v := range datapack.CurrentVariables.Variables {
-		SerialSendCmd(datapack.ACT_SUBSCRIBE, v)
-		time.Sleep(10 * time.Millisecond)
-	}
+	chOpen <- 1
 	return nil
 }
 
 func CloseSerialPort() error {
 	if MySerialPort != nil {
-		return MySerialPort.Close()
+		err := MySerialPort.Close()
+		if err != nil {
+			return err
+		}
+		chClose <- 1
+		return nil
 	}
 	return errors.New("empty serial port")
 }
@@ -186,13 +191,25 @@ func praseBuff(raw []byte) []byte {
 
 func SerialThread(jsonString chan string) {
 	for {
-		if MySerialPort != nil && CurrentSerialPort.Name != "" {
-			buff, err := SerialReceive()
-			if err != nil {
-				log.Println("Fail: Can't receive serial data")
+		<-chOpen
+		for _, v := range datapack.CurrentVariables.Variables {
+			SerialSendCmd(datapack.ACT_SUBSCRIBE, v)
+			time.Sleep(10 * time.Millisecond)
+		}
+	Loop:
+		for {
+			select {
+			case <-chClose:
+				break Loop
+			default:
+				buff, err := SerialReceive()
+				if err != nil {
+					log.Println("Fail: Can't receive serial data")
+				}
+				b := praseBuff(buff)
+				jsonString <- string(b)
+				time.Sleep(9 * time.Millisecond)
 			}
-			b := praseBuff(buff)
-			jsonString <- string(b)
 		}
 		time.Sleep(9 * time.Millisecond)
 	}
