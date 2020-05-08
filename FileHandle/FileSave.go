@@ -24,9 +24,6 @@ func jsonLoad(filename string, v interface{}) {
 }
 
 func jsonSave(filename string, v interface{}) {
-	if _, err := os.Stat(filename); !os.IsNotExist(err) {
-		os.Remove(filename)
-	}
 	jsonTxt, err := json.Marshal(v)
 	if err != nil {
 		log.Println(err)
