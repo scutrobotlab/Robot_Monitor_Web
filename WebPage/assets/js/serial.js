@@ -1,32 +1,14 @@
-var appSerialList = new Vue({
-    el: '#serialport',
+var appSerial = new Vue({
+    el: '#serial',
     data :{
         selected: '',
         serialLists:[]
-    }
-})
-axios.get('/serial')
-    .then(function (response) {
-        appSerialList.selected=response.data.Name
-    })
-    .catch(function (error) {
-        console.log(error);
-    })
-axios.get('/serial/list')
-    .then(function (response) {
-        appSerialList.serialLists=response.data.Ports
-    })
-    .catch(function (error) {
-        console.log(error);
-    })
-
-var appSerialBtn = new Vue({
-    el: '#serialbtn',
+    },
     methods: {
         openserial: function(event){
             axios.get('/serial/open', {
                     params: {
-                        port: appSerialList.selected
+                        port: appSerial.selected
                     }
                 })
                 .then(function (response) {
@@ -59,7 +41,7 @@ var appSerialBtn = new Vue({
         refreshserial: function(event){
             axios.get('/serial/list')
                 .then(function (response) {
-                    appSerialList.serialLists=response.data.Ports
+                    appSerial.serialLists=response.data.Ports
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -67,3 +49,18 @@ var appSerialBtn = new Vue({
         }
     }
 })
+
+axios.get('/serial')
+    .then(function (response) {
+        appSerial.selected=response.data.Name
+    })
+    .catch(function (error) {
+        console.log(error);
+    })
+axios.get('/serial/list')
+    .then(function (response) {
+        appSerial.serialLists=response.data.Ports
+    })
+    .catch(function (error) {
+        console.log(error);
+    })
