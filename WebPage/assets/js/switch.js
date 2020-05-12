@@ -1,3 +1,9 @@
+$.fn.bootstrapSwitch.defaults.onText = '是';
+$.fn.bootstrapSwitch.defaults.offText = '否';
+$.fn.bootstrapSwitch.defaults.onColor = 'info';
+$.fn.bootstrapSwitch.defaults.offColor = 'danger';
+$.fn.bootstrapSwitch.defaults.size = 'mini';
+
 axios.get('/file/config')
     .then(function (response) {
         $("[name='checkbox-sda']").bootstrapSwitch('state',response.data.IsSaveDataAddr,true)
@@ -8,11 +14,6 @@ axios.get('/file/config')
         console.log(error);
     })
 
-$.fn.bootstrapSwitch.defaults.onText = '是';
-$.fn.bootstrapSwitch.defaults.offText = '否';
-$.fn.bootstrapSwitch.defaults.onColor = 'info';
-$.fn.bootstrapSwitch.defaults.offColor = 'danger';
-$.fn.bootstrapSwitch.defaults.size = 'mini';
 $("[name='checkbox-sda']").bootstrapSwitch({
     onSwitchChange:function(event,state){
         axios.get('/file/config', {

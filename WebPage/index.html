@@ -54,8 +54,9 @@
                                     <option v-for="serialList in serialLists" v-bind:value="serialList">{{serialList}}</option>
                                 </select>
                             </div></p>
-                                <p><button class="btn btn-primary" v-on:click="openserial">打开串口</button>
-                                <button class="btn btn-danger" v-on:click="closeserial">关闭串口</button></p>
+                        </div>
+                        <div>
+                            <p>串口状态 <input type="checkbox" name="checkbox-serial"></p>
                         </div>
                         <p><div class="input-group" id="fileupload">
                             <div class="input-group-prepend">

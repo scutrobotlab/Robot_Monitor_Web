@@ -5,39 +5,6 @@ var appSerial = new Vue({
         serialLists:[]
     },
     methods: {
-        openserial: function(event){
-            axios.get('/serial/open', {
-                    params: {
-                        port: appSerial.selected
-                    }
-                })
-                .then(function (response) {
-                    if (response.data.status==0){
-                        toastShow('串口打开成功',0)
-                    }else if (response.data.status==11){
-                        toastShow('无法打开串口',1)
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        closeserial: function(event){
-            axios.get('/serial/close')
-                .then(function (response) {
-                    if (response.data.status==0){
-                        toastShow('串口关闭成功',0)
-                    }else if (response.data.status==12){
-                        toastShow('在未打开串口情况下关闭串口',1)
-                    }
-                    else if (response.data.status==13){
-                        toastShow('无法关闭串口',1)
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
         refreshserial: function(event){
             axios.get('/serial/list')
                 .then(function (response) {
@@ -53,6 +20,7 @@ var appSerial = new Vue({
 axios.get('/serial')
     .then(function (response) {
         appSerial.selected=response.data.Name
+        $("[name='checkbox-serial']").bootstrapSwitch('state',response.data.Name!="",true)
     })
     .catch(function (error) {
         console.log(error);
@@ -64,3 +32,43 @@ axios.get('/serial/list')
     .catch(function (error) {
         console.log(error);
     })
+
+
+$("[name='checkbox-serial']").bootstrapSwitch({
+    onText: '开',
+    offText: '关',
+    onSwitchChange:function(event,state){
+        if(state){
+            axios.get('/serial/open', {
+                params: {
+                    port: $("#serialport").val()
+                }
+            })
+                .then(function (response) {
+                    if (response.data.status==0){
+                        toastShow('串口打开成功',0)
+                    }else if (response.data.status==11){
+                        toastShow('无法打开串口',1)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }else{
+            axios.get('/serial/close')
+                .then(function (response) {
+                    if (response.data.status==0){
+                        toastShow('串口关闭成功',0)
+                    }else if (response.data.status==12){
+                        toastShow('在未打开串口情况下关闭串口',1)
+                    }
+                    else if (response.data.status==13){
+                        toastShow('无法关闭串口',1)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }
+    }
+});
