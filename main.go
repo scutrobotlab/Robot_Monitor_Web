@@ -3,9 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	filehandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/FileHandle"
@@ -22,20 +19,7 @@ func main() {
        \ \_\ \_\ \____/\ \____/\ \____/\ \__\    \ \_\\ \_\ \____/\ \_\ \_\ \_\ \__\ \____/\ \_\ 
         \/_/\/ /\/___/  \/___/  \/___/  \/__/     \/_/ \/_/\/___/  \/_/\/_/\/_/\/__/\/___/  \/_/ `)
 	filehandle.LoadSaves()
-	c := make(chan os.Signal)
-	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-	go func() {
-		for s := range c {
-			switch s {
-			case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
-				filehandle.SaveAll()
-				serialhandle.CloseSerialPort()
-				os.Exit(0)
-			default:
-				os.Exit(0)
-			}
-		}
-	}()
+	defer serialhandle.CloseSerialPort()
 	go func() {
 		for {
 			time.Sleep(5 * time.Second)
