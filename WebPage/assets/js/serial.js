@@ -47,6 +47,8 @@ $("[name='checkbox-serial']").bootstrapSwitch({
                 .then(function (response) {
                     if (response.data.status==0){
                         toastShow('串口打开成功',0)
+                    }else if (response.data.status==1){
+                        toastShow('未选择串口',1)
                     }else if (response.data.status==11){
                         toastShow('无法打开串口',1)
                     }
