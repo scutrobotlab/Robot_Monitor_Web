@@ -56,7 +56,7 @@ func main() {
 		log.Printf("don't know how to open things on %s platform", runtime.GOOS)
 	} else {
 		go func() {
-			log.Println("Your browers will start in 3 seconds")
+			log.Println("Your browser will start in 3 seconds")
 			time.Sleep(3 * time.Second)
 			exec.Command(run, "http://localhost"+port).Start()
 		}()

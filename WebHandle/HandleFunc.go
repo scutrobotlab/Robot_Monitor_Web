@@ -255,5 +255,7 @@ func Reg() {
 	http.HandleFunc("/file/upload", fileUploadWebHandler)
 	http.HandleFunc("/file/variables", fileVariablesWebHandler)
 	http.HandleFunc("/file/config", fileConfigWebHandler)
+	http.HandleFunc("/wson", webSocketOnHandler)
+	http.HandleFunc("/wsoff", webSocketOffHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
 }

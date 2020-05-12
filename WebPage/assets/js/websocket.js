@@ -1,34 +1,52 @@
-window.addEventListener("load", function(evt) {
-    var ws;
-    var tickoffset = 0;
-    $("#openWS").click (function(event){
-        if (ws) {
-            return false;
+var ws = new WebSocket("ws://"+window.location.host+"/ws");
+ws.onopen = function(evt) {
+    toastShow("连接成功",0);
+}
+ws.onclose = function(evt) {
+    toastShow("连接断开",1);
+    ws = null;
+}
+ws.onmessage = function(evt) {
+    praseWS(evt.data);
+}
+ws.onerror = function(evt) {
+    console.log("ERROR: " + evt.data);
+}
+
+$("[name='checkbox-ws']").bootstrapSwitch({
+    onText: '启动',
+    offText: '停止',
+    onSwitchChange:function(event,state){
+        if(state){
+            axios.get('/wson')
+                .then(function (response) {
+                    if (response.data.status==0){
+                        toastShow('已启动',0)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }else{
+            axios.get('/wsoff')
+                .then(function (response) {
+                    if (response.data.status==0){
+                        toastShow('已停止',0)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
         }
-        ws = new WebSocket("ws://"+document.domain+":8080/ws");
-        ws.onopen = function(evt) {
-            toastShow("连接成功",0);
+    }
+})
+
+function praseWS(data){
+    if(data!=""){
+        const jsonWS = JSON.parse(data);
+        for(i in jsonWS.DataPack){
+            chartData[i].push({x:jsonWS.DataPack[i].Tick,y:jsonWS.DataPack[i].Data});
         }
-        ws.onclose = function(evt) {
-            ws = null;
-        }
-        ws.onmessage = function(evt) {
-            var jsonWS = JSON.parse(evt.data);
-            l = tickoffset==0?jsonWS.DataPack[0].Tick:jsonWS.DataPack[0].Tick-tickoffset;
-            var d = {'x':l,'y':jsonWS.DataPack[0].Data};
-            chartData.push(d);
-            chart.update();
-        }
-        ws.onerror = function(evt) {
-            print("ERROR: " + evt.data);
-        }
-        return false;
-    });
-    $("#closeWS").click (function(event) {
-        if (!ws) {
-            return false;
-        }
-        ws.close();
-        return false;
-    });
-});
+        chart.update();
+    }
+}

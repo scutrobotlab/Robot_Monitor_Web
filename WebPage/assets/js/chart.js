@@ -1,5 +1,15 @@
 const el = document.getElementById('chart');
-const chartData = [];
+const chartData = [[],[]];
 const chart = new TimeChart(el, {
-    series: [{ data:chartData }],
+    series: [
+        {
+            name:'a',
+            data:chartData[0]
+        },
+        {
+            name:'b',
+            color: 'red',
+            data:chartData[1]
+        }
+    ]
 });
