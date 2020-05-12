@@ -58,6 +58,7 @@
                         <div>
                             <p>串口状态 <input type="checkbox" name="checkbox-serial"></p>
                         </div>
+
                         <p><div class="input-group" id="fileupload">
                             <div class="input-group-prepend">
                                 <button class="btn btn-primary" v-on:click="upload">上传</button>
@@ -67,13 +68,8 @@
                                 <label class="custom-file-label">{{file.name}}</label>
                             </div>
                         </div></p>
-                        <div><p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#variablesModalScrollable">变量列表</button></p></div>
-                        <div id="saveconfig">
-                            <p>保存变量列表 <input type="checkbox" name="checkbox-sda"></p>
-                            <p>保存观察变量 <input type="checkbox" name="checkbox-svr"></p>
-                            <p>保存修改列表 <input type="checkbox" name="checkbox-svm"></p>
-                        </div>
 
+                        <div><p><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#variablesModalScrollable">变量列表</button></p></div>
                         <div class="modal fade" id="variablesModalScrollable" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
                                 <div class="modal-content">
@@ -119,11 +115,19 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div id="saveconfig">
+                            <p>保存变量列表 <input type="checkbox" name="checkbox-sda"></p>
+                            <p>保存观察变量 <input type="checkbox" name="checkbox-svr"></p>
+                            <p>保存修改列表 <input type="checkbox" name="checkbox-svm"></p>
+                        </div>
                     </div>
+
                     <div class="tab-pane fade" id="nav-read" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewVariable" data-whatever="@getbootstrap">添加变量</button>
                         <button type="button" class="btn btn-primary" id="openWS">启动</button>
                         <button type="button" class="btn btn-danger" id="closeWS">停止</button>
+
                         <div class="modal fade" id="NewVariable" tabindex="-1" role="dialog" aria-labelledby="NewVariableLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                             <div class="modal-content" id="variableadd">
@@ -162,6 +166,7 @@
                             </div>
                             </div>
                         </div>
+
                         <div id="variablelist">
                             <table class="table table-sm">
                                 <thead>
@@ -184,8 +189,10 @@
                             </table>
                         </div>
                     </div>
+
                     <div class="tab-pane fade" id="nav-write" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewVariableMod" data-whatever="@getbootstrap">添加变量</button>
+
                         <div class="modal fade" id="NewVariableMod" tabindex="-1" role="dialog" aria-labelledby="NewVariableModLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                             <div class="modal-content" id="variablemodadd">
@@ -224,6 +231,7 @@
                             </div>
                             </div>
                         </div>
+
                         <div id="variablemodlist">
                             <div v-for="(list,index) in lists">
                                 <div class="input-group">
@@ -240,13 +248,17 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
+                    
                 </div>
+
             </div>
 
             <div class="col-md-9">
                 <div id="chart" style="width: 100%; height: 500px;"></div>
             </div>
+
         </div>
     </div>
     <script src="/assets/js/switch.js"></script>
