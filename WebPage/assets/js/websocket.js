@@ -15,30 +15,7 @@ ws.onerror = function(evt) {
 
 $("[name='checkbox-ws']").bootstrapSwitch({
     onText: '启动',
-    offText: '停止',
-    onSwitchChange:function(event,state){
-        if(state){
-            axios.get('/wson')
-                .then(function (response) {
-                    if (response.data.status==0){
-                        toastShow('已启动',0)
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        }else{
-            axios.get('/wsoff')
-                .then(function (response) {
-                    if (response.data.status==0){
-                        toastShow('已停止',0)
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        }
-    }
+    offText: '停止'
 })
 
 function praseWS(data){
@@ -47,6 +24,8 @@ function praseWS(data){
         for(i in jsonWS.DataPack){
             chartData[i].push({x:jsonWS.DataPack[i].Tick,y:jsonWS.DataPack[i].Data});
         }
-        chart.update();
+        if($("[name='checkbox-ws']").prop("checked")){
+            chart.update();
+        }
     }
 }
