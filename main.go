@@ -2,7 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"os/exec"
+	"runtime"
+	"strconv"
 	"time"
 
 	filehandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/FileHandle"
@@ -27,5 +32,34 @@ func main() {
 		}
 	}()
 	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
-	webhandle.Start()
+	webhandle.Reg()
+	port := ""
+	if len(os.Args) > 1 {
+		p, _ := strconv.Atoi(os.Args[1])
+		if p > 0 && p < 65535 {
+			port = ":" + os.Args[1]
+		} else {
+			port = ":8080"
+		}
+	} else {
+		port = ":8080"
+	}
+	log.Println("Listen on " + port)
+	log.Println("Don't close this before you have done")
+	var commands = map[string]string{
+		"windows": "explorer.exe",
+		"darwin":  "open",
+		"linux":   "xdg-open",
+	}
+	run, ok := commands[runtime.GOOS]
+	if !ok {
+		log.Printf("don't know how to open things on %s platform", runtime.GOOS)
+	} else {
+		go func() {
+			log.Println("Your browers will start in 3 seconds")
+			time.Sleep(3 * time.Second)
+			exec.Command(run, "http://localhost"+port).Start()
+		}()
+	}
+	log.Fatal(http.ListenAndServe(port, nil))
 }

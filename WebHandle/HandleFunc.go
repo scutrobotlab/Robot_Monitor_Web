@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"sort"
@@ -237,7 +236,7 @@ func fileConfigWebHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Start() {
+func Reg() {
 	jsonWS := make(chan string, 10)
 	go serialhandle.SerialThread(jsonWS)
 	WebSocketHandler := makeWebSocketHandler(jsonWS)
@@ -257,7 +256,4 @@ func Start() {
 	http.HandleFunc("/file/variables", fileVariablesWebHandler)
 	http.HandleFunc("/file/config", fileConfigWebHandler)
 	http.HandleFunc("/ws", WebSocketHandler)
-	addr := ":8080"
-	log.Println("Listen on " + addr)
-	log.Fatal(http.ListenAndServe(addr, nil))
 }
