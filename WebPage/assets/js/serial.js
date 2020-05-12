@@ -49,8 +49,10 @@ $("[name='checkbox-serial']").bootstrapSwitch({
                         toastShow('串口打开成功',0)
                     }else if (response.data.status==1){
                         toastShow('未选择串口',1)
+                        $("[name='checkbox-serial']").bootstrapSwitch('state',false,true)
                     }else if (response.data.status==11){
                         toastShow('无法打开串口',1)
+                        $("[name='checkbox-serial']").bootstrapSwitch('state',false,true)
                     }
                 })
                 .catch(function (error) {
@@ -63,9 +65,11 @@ $("[name='checkbox-serial']").bootstrapSwitch({
                         toastShow('串口关闭成功',0)
                     }else if (response.data.status==12){
                         toastShow('在未打开串口情况下关闭串口',1)
+                        $("[name='checkbox-serial']").bootstrapSwitch('state',true,true)
                     }
                     else if (response.data.status==13){
                         toastShow('无法关闭串口',1)
+                        $("[name='checkbox-serial']").bootstrapSwitch('state',true,true)
                     }
                 })
                 .catch(function (error) {
