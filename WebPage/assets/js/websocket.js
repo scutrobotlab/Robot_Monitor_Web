@@ -18,11 +18,18 @@ $("[name='checkbox-ws']").bootstrapSwitch({
     offText: '停止'
 })
 
+var cColors = 0
 function praseWS(data){
     if(data!=""){
         const jsonWS = JSON.parse(data);
         for(i in jsonWS.DataPack){
-            chartData[i].push({x:jsonWS.DataPack[i].Tick,y:jsonWS.DataPack[i].Data});
+            const fi = chart.options.series.findIndex((a) => a.name == jsonWS.DataPack[i].Name);
+            if(fi>-1){
+                chart.options.series[fi].data.push({x:jsonWS.DataPack[i].Tick,y:jsonWS.DataPack[i].Data})
+            }else{
+                chart.options.series.push({name:jsonWS.DataPack[i].Name,color:colors[cColors],data:[{x:jsonWS.DataPack[i].Tick,y:jsonWS.DataPack[i].Data}]})
+                cColors++
+            }
         }
         if($("[name='checkbox-ws']").prop("checked")){
             chart.update();

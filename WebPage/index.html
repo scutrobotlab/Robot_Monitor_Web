@@ -167,25 +167,18 @@
                         </div>
 
                         <div id="variablelist">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>名称</th>
-                                        <th>类型</th>
-                                        <th>地址</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(list,index) in lists">
-                                        <td>{{list.Name}}</td>
-                                        <td>{{list.Type}}</td>
-                                        <td>{{hexdsp(list.Addr)}}</td>
-                                        <td><button type="button" class="close" aria-label="关闭" v-on:click="variabledel(index)">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div v-for="(list,index) in lists">
+                                <div class="input-group">
+                                    <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{list.Name}}</button>
+                                    <div class="dropdown-menu">
+                                    <a class="dropdown-item">{{list.Type}}</a>
+                                    <a class="dropdown-item">{{hexdsp(list.Addr)}}</a>
+                                    </div>
+                                    <button type="button" class="close" aria-label="关闭" v-on:click="variabledel(index)">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
