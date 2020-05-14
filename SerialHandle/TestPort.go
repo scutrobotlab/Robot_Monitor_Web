@@ -64,10 +64,12 @@ func (tp *testPort) Read(p []byte) (n int, err error) {
 		s[1] = 2 // ???
 		s[2] = 8 // typeLen
 		copy(s[3:7], datapack.AnyToBytes(addr))
-		x := time.Now().Sub(tp.createdTime).Seconds()
+		t := time.Now().Sub(tp.createdTime)
+		x := t.Seconds()
+		u := t.Microseconds()
 		y := testValue(x, addr)
 		copy(s[7:15], datapack.AnyToBytes(y))
-		copy(s[15:19], datapack.AnyToBytes(uint32(x)))
+		copy(s[15:19], datapack.AnyToBytes(uint32(u)))
 		s[19] = '\n'
 	}
 	return len(addresses) * 20, nil

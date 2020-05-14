@@ -51,6 +51,7 @@ func OpenSerialPort(portName string, baudRate int) error {
 	}
 	if portName == testPortName {
 		MySerialPort = newTestPort()
+		chOpen <- 1
 		return nil
 	}
 	var err error
