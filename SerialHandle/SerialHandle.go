@@ -226,5 +226,6 @@ func SerialTransmitThread() {
 		if err != nil {
 			log.Println(err)
 		}
+		time.Sleep(3 * time.Millisecond)
 	}
 }
