@@ -1,6 +1,7 @@
 axios.get('/file/variables')
     .then(function (response) {
         appFileVariables.lists=response.data.Variables
+        appFileVariables.searchData=response.data.Variables
     })
     .catch(function (error) {
         console.log(error);
@@ -28,6 +29,7 @@ var appFileUpload = new Vue({
                         axios.get('/file/variables')
                             .then(function (response) {
                                 appFileVariables.lists=response.data.Variables
+                                appFileVariables.searchData=response.data.Variables
                             })
                             .catch(function (error) {
                                 console.log(error);
@@ -51,17 +53,22 @@ var appFileVariables = new Vue({
     el: '#filevariables',
     data :{
         lists:[],
+        searchData:[],
         keyword:''
     },
     methods :{
         search: function(event){
             var keyword = this.keyword
             if (keyword) {
-                this.lists = this.lists.filter(function(lists) {
-                    return Object.keys(lists).some(function(key) {
-                        return String(lists[key]).toLowerCase().indexOf(keyword) > -1
+                this.searchData = this.lists.filter(function(product) {
+                    return Object.keys(product).some(function(key) {
+                        return String(product[key]).toLowerCase().indexOf(keyword) > -1
                     })
                 })
+            }else if(keyword.length==0){
+                this.searchData = this.lists
+            }else{
+                return this.searchData
             }
         },
         variableadd: function(index){

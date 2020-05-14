@@ -82,7 +82,7 @@
                                     <div class="modal-body">
                                         <div id="filevariables">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" v-model="keyword">
+                                                <input type="search" class="form-control" v-model="keyword" v-on:keyup.enter="search">
                                                 <div class="input-group-append">
                                                 <button class="btn btn-outline-secondary" type="button" v-on:click="search">搜索</button>
                                                 </div>
@@ -98,7 +98,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-for="(list,index) in lists">
+                                                    <tr v-for="(list,index) in searchData">
                                                         <td>{{list.Name}}</td>
                                                         <td>{{list.Type}}</td>
                                                         <td>{{list.Addr}}</td>
