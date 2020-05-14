@@ -237,8 +237,11 @@ func fileConfigWebHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Reg() {
+	rxBuff := make(chan []byte, 100)
 	jsonWS := make(chan string, 10)
-	go serialhandle.SerialThread(jsonWS)
+	go serialhandle.SerialTransmitThread()
+	go serialhandle.SerialReceiveThread(rxBuff)
+	go serialhandle.SerialPraseThread(rxBuff, jsonWS)
 	WebSocketHandler := makeWebSocketHandler(jsonWS)
 	http.HandleFunc("/serial", currentSerialPortWebHandler)
 	http.HandleFunc("/serial/list", listSerialPortsWebHandler)
