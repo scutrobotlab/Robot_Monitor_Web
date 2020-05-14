@@ -115,18 +115,19 @@ func SerialSendCmd(act uint8, variable datapack.VariableT) error {
 	return errors.New("No serial port")
 }
 
-func verifyBuff(buff []byte) (int, []byte) {
+func verifyBuff(buff []byte) (int, int, []byte) {
 	if len(buff) < 19 {
-		return 0, nil
+		return 0, 0, nil
 	}
 	if buff[0] == datapack.BOARD_1 && buff[1] == datapack.ACT_SUBSCRIBERETURN && len(buff)%20 == 0 {
-		return len(buff) / 20, buff
+		return 0, len(buff) / 20, buff
 	}
 	b1 := buff[:]
 	b2 := buff[:]
-	for i, v := range buff {
-		if v == datapack.BOARD_1 && len(buff[i:]) > 19 && buff[i+1] == datapack.ACT_SUBSCRIBERETURN {
-			b1 = b1[i:]
+	var index int
+	for index, v := range buff {
+		if v == datapack.BOARD_1 && len(buff[index:]) > 19 && buff[index+1] == datapack.ACT_SUBSCRIBERETURN {
+			b1 = b1[index:]
 			break
 		}
 	}
@@ -134,12 +135,12 @@ func verifyBuff(buff []byte) (int, []byte) {
 		if b1[i] == 10 {
 			b2 = b1[:i+1]
 			if len(b2)%20 == 0 {
-				return len(b2) / 20, b2
+				return index, len(b2) / 20, b2
 			}
 			b2 = b1[:]
 		}
 	}
-	return 0, nil
+	return 0, 0, nil
 }
 
 func SerialPraseThread(chRxBuff chan []byte, chJson chan string) {
@@ -147,10 +148,11 @@ func SerialPraseThread(chRxBuff chan []byte, chJson chan string) {
 	var chartData datapack.DataToChartT
 	for {
 		chartPack.DataPack = chartPack.DataPack[0:0]
+		chartData.Name = ""
 		b := <-chRxBuff
 		rxBuff = append(rxBuff, b...)
-		packNum, buff := verifyBuff(rxBuff)
-		rxBuff = rxBuff[packNum*20:]
+		index, packNum, buff := verifyBuff(rxBuff)
+		rxBuff = rxBuff[index+packNum*20:]
 		for i := 0; i < packNum; i++ {
 			chartData.Board = buff[i*20]
 			chartData.Tick = datapack.BytesToUint32(buff[i*20+15 : i*20+19])
@@ -182,9 +184,12 @@ func SerialPraseThread(chRxBuff chan []byte, chJson chan string) {
 					default:
 						chartData.Data = 0
 					}
+					break
 				}
 			}
-			chartPack.DataPack = append(chartPack.DataPack, chartData)
+			if chartData.Name != "" {
+				chartPack.DataPack = append(chartPack.DataPack, chartData)
+			}
 		}
 		b, err := json.Marshal(chartPack)
 		if err != nil {
