@@ -7,8 +7,8 @@ $.fn.bootstrapSwitch.defaults.size = 'mini';
 axios.get('/file/config')
     .then(function (response) {
         $("[name='checkbox-sda']").bootstrapSwitch('state',response.data.IsSaveDataAddr,true)
-        $("[name='checkbox-svm']").bootstrapSwitch('state',response.data.IsSaveVariablesToMod,true)
-        $("[name='checkbox-svr']").bootstrapSwitch('state',response.data.IsSaveVariablesToRead,true)
+        $("[name='checkbox-svm']").bootstrapSwitch('state',response.data.IsSaveVariableModi,true)
+        $("[name='checkbox-svr']").bootstrapSwitch('state',response.data.IsSaveVariableRead,true)
     })
     .catch(function (error) {
         console.log(error);

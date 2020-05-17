@@ -158,7 +158,7 @@ func SerialPraseThread(chRxBuff chan []byte, chJson chan string) {
 			chartData.Board = buff[i*20]
 			chartData.Tick = datapack.BytesToUint32(buff[i*20+15 : i*20+19])
 			addr := datapack.BytesToUint32(buff[i*20+3 : i*20+7])
-			for _, v := range datapack.CurrentVariables.Variables {
+			for _, v := range datapack.VariableRead.Variables {
 				if v.Addr == addr {
 					chartData.Name = v.Name
 					switch v.Type {
@@ -203,7 +203,7 @@ func SerialPraseThread(chRxBuff chan []byte, chJson chan string) {
 func SerialReceiveThread(chRxBuff chan []byte) {
 	for {
 		<-chOpen
-		for _, v := range datapack.CurrentVariables.Variables {
+		for _, v := range datapack.VariableRead.Variables {
 			SerialSendCmd(datapack.ACT_SUBSCRIBE, v)
 			time.Sleep(10 * time.Millisecond)
 		}

@@ -44,12 +44,12 @@ type VariableT struct {
 	Tick  uint32
 }
 
-type jsonCurrentVariablesT struct {
+type jsonVariablesT struct {
 	Variables []VariableT
 }
 
-var CurrentVariables jsonCurrentVariablesT
-var ModVariables jsonCurrentVariablesT
+var VariableRead jsonVariablesT
+var VariableModi jsonVariablesT
 
 type DataToChartT struct {
 	Board uint8

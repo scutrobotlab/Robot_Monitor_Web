@@ -112,7 +112,7 @@
 ##### 请求地址
 |  方法 |    URL     |
 |-------|-----------|
-| `GET` | `/variable` |
+| `GET` | `/variable-read/list` |
 ##### 请求参数
 无
 ##### 响应结果
@@ -126,7 +126,7 @@
 | Variables[].Data |  float   | 变量值 |
 ##### 调用示例
 请求示例：  
-`GET /variable`  
+`GET /variable-read/list`  
 响应示例：  
 ```
 {
@@ -176,7 +176,7 @@
 ##### 请求地址
 |  方法 |    URL     |
 |-------|-----------|
-| `POST` | `/variable/add` |
+| `POST` | `/variable-read/add` |
 ##### 请求参数
 | 参数 | 类型    | 说明  |
 |------|--------|-------|
@@ -190,7 +190,7 @@
 | status | int | 状态码 |
 ##### 调用示例
 请求示例：  
-`POST /variable/add`  
+`POST /variable-read/add`  
 ```
 {
     "Board":1,
@@ -210,7 +210,7 @@
 ##### 请求地址
 |  方法 |    URL     |
 |-------|-----------|
-| `POST` | `/variable/del` |
+| `POST` | `/variable-read/del` |
 ##### 请求参数
 | 参数 | 类型    | 说明  |
 |------|--------|-------|
@@ -224,7 +224,7 @@
 | status | int | 状态码 |
 ##### 调用示例
 请求示例：  
-`POST /variable/del`  
+`POST /variable-read/del`  
 ```
 {
     "Board":1,
@@ -244,7 +244,7 @@
 ##### 请求地址
 |  方法 |    URL     |
 |-------|-----------|
-| `POST` | `/variable/mod` |
+| `POST` | `/variable-modi/mod` |
 ##### 请求参数
 | 参数 | 类型    | 说明  |
 |------|--------|-------|
@@ -259,7 +259,7 @@
 | status | int | 状态码 |
 ##### 调用示例
 请求示例：  
-`POST /variable/mod`  
+`POST /variable-modi/mod`  
 ```
 {
     "Board":1,

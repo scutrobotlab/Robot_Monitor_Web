@@ -66,8 +66,8 @@ func closeSerialPortWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func currentVariablesWebHandler(w http.ResponseWriter, _ *http.Request) {
-	b, _ := json.Marshal(datapack.CurrentVariables)
+func variableReadListWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(datapack.VariableRead)
 	io.WriteString(w, string(b))
 }
 
@@ -84,12 +84,12 @@ func variableTypesWebHandler(w http.ResponseWriter, _ *http.Request) {
 	io.WriteString(w, string(b))
 }
 
-func variableAddWebHandler(w http.ResponseWriter, r *http.Request) {
+func variableReadAddWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var newVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
 	if json.Unmarshal(postData, &newVariable) == nil {
-		for _, v := range datapack.CurrentVariables.Variables {
+		for _, v := range datapack.VariableRead.Variables {
 			if v.Addr == newVariable.Addr {
 				io.WriteString(w, "{\"status\":23}")
 				return
@@ -98,7 +98,7 @@ func variableAddWebHandler(w http.ResponseWriter, r *http.Request) {
 		if serialhandle.SerialSendCmd(datapack.ACT_SUBSCRIBE, newVariable) != nil {
 			io.WriteString(w, "{\"status\":22}")
 		} else {
-			datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables, newVariable)
+			datapack.VariableRead.Variables = append(datapack.VariableRead.Variables, newVariable)
 			io.WriteString(w, "{\"status\":0}")
 		}
 	} else {
@@ -106,17 +106,17 @@ func variableAddWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func variableDelWebHandler(w http.ResponseWriter, r *http.Request) {
+func variableReadDelWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var oldVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
 	if json.Unmarshal(postData, &oldVariable) == nil {
-		for i, v := range datapack.CurrentVariables.Variables {
+		for i, v := range datapack.VariableRead.Variables {
 			if v.Addr == oldVariable.Addr {
 				if serialhandle.SerialSendCmd(datapack.ACT_UNSUBSCRIBE, oldVariable) != nil {
 					io.WriteString(w, "{\"status\":22}")
 				} else {
-					datapack.CurrentVariables.Variables = append(datapack.CurrentVariables.Variables[:i], datapack.CurrentVariables.Variables[i+1:]...)
+					datapack.VariableRead.Variables = append(datapack.VariableRead.Variables[:i], datapack.VariableRead.Variables[i+1:]...)
 					io.WriteString(w, "{\"status\":0}")
 				}
 				return
@@ -128,7 +128,7 @@ func variableDelWebHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "{\"status\":21}")
 }
 
-func variableModWebHandler(w http.ResponseWriter, r *http.Request) {
+func variableModiModWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var modVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
@@ -143,32 +143,32 @@ func variableModWebHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func variableModAddWebHandler(w http.ResponseWriter, r *http.Request) {
+func variableModiAddWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var newVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
 	if json.Unmarshal(postData, &newVariable) == nil {
-		for _, v := range datapack.ModVariables.Variables {
+		for _, v := range datapack.VariableModi.Variables {
 			if v.Addr == newVariable.Addr {
 				io.WriteString(w, "{\"status\":23}")
 				return
 			}
 		}
-		datapack.ModVariables.Variables = append(datapack.ModVariables.Variables, newVariable)
+		datapack.VariableModi.Variables = append(datapack.VariableModi.Variables, newVariable)
 		io.WriteString(w, "{\"status\":0}")
 	} else {
 		io.WriteString(w, "{\"status\":21}")
 	}
 }
 
-func variableModDelWebHandler(w http.ResponseWriter, r *http.Request) {
+func variableModiDelWebHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var oldVariable datapack.VariableT
 	postData, _ := ioutil.ReadAll(r.Body)
 	if json.Unmarshal(postData, &oldVariable) == nil {
-		for i, v := range datapack.ModVariables.Variables {
+		for i, v := range datapack.VariableModi.Variables {
 			if v.Addr == oldVariable.Addr {
-				datapack.ModVariables.Variables = append(datapack.ModVariables.Variables[:i], datapack.ModVariables.Variables[i+1:]...)
+				datapack.VariableModi.Variables = append(datapack.VariableModi.Variables[:i], datapack.VariableModi.Variables[i+1:]...)
 				io.WriteString(w, "{\"status\":0}")
 				return
 			}
@@ -179,8 +179,8 @@ func variableModDelWebHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "{\"status\":21}")
 }
 
-func variableModListWebHandler(w http.ResponseWriter, _ *http.Request) {
-	b, _ := json.Marshal(datapack.ModVariables)
+func variableModiListWebHandler(w http.ResponseWriter, _ *http.Request) {
+	b, _ := json.Marshal(datapack.VariableModi)
 	io.WriteString(w, string(b))
 }
 
@@ -225,10 +225,10 @@ func fileConfigWebHandler(w http.ResponseWriter, r *http.Request) {
 			filehandle.Config.IsSaveDataAddr, _ = strconv.ParseBool(strings.Join(r.Form["sda"], ""))
 		}
 		if _, ok := r.Form["svm"]; ok {
-			filehandle.Config.IsSaveVariablesToMod, _ = strconv.ParseBool(strings.Join(r.Form["svm"], ""))
+			filehandle.Config.IsSaveVariableModi, _ = strconv.ParseBool(strings.Join(r.Form["svm"], ""))
 		}
 		if _, ok := r.Form["svr"]; ok {
-			filehandle.Config.IsSaveVariablesToRead, _ = strconv.ParseBool(strings.Join(r.Form["svr"], ""))
+			filehandle.Config.IsSaveVariableRead, _ = strconv.ParseBool(strings.Join(r.Form["svr"], ""))
 		}
 		filehandle.SaveConfig()
 		io.WriteString(w, "{\"status\":0}")
@@ -242,21 +242,21 @@ func Reg() {
 	go serialhandle.SerialTransmitThread()
 	go serialhandle.SerialReceiveThread(rxBuff)
 	go serialhandle.SerialPraseThread(rxBuff, jsonWS)
-	WebSocketHandler := makeWebSocketHandler(jsonWS)
+	webSocketHandler := makeWebSocketHandler(jsonWS)
 	http.HandleFunc("/serial", currentSerialPortWebHandler)
 	http.HandleFunc("/serial/list", listSerialPortsWebHandler)
 	http.HandleFunc("/serial/open", openSerialPortWebHandler)
 	http.HandleFunc("/serial/close", closeSerialPortWebHandler)
-	http.HandleFunc("/variable", currentVariablesWebHandler)
 	http.HandleFunc("/variable/types", variableTypesWebHandler)
-	http.HandleFunc("/variable/add", variableAddWebHandler)
-	http.HandleFunc("/variable/del", variableDelWebHandler)
-	http.HandleFunc("/variable/mod", variableModWebHandler)
-	http.HandleFunc("/variable/modadd", variableModAddWebHandler)
-	http.HandleFunc("/variable/moddel", variableModDelWebHandler)
-	http.HandleFunc("/variable/modlist", variableModListWebHandler)
+	http.HandleFunc("/variable-read/list", variableReadListWebHandler)
+	http.HandleFunc("/variable-read/add", variableReadAddWebHandler)
+	http.HandleFunc("/variable-read/del", variableReadDelWebHandler)
+	http.HandleFunc("/variable-modi/list", variableModiListWebHandler)
+	http.HandleFunc("/variable-modi/add", variableModiAddWebHandler)
+	http.HandleFunc("/variable-modi/del", variableModiDelWebHandler)
+	http.HandleFunc("/variable-modi/mod", variableModiModWebHandler)
 	http.HandleFunc("/file/upload", fileUploadWebHandler)
 	http.HandleFunc("/file/variables", fileVariablesWebHandler)
 	http.HandleFunc("/file/config", fileConfigWebHandler)
-	http.HandleFunc("/ws", WebSocketHandler)
+	http.HandleFunc("/ws", webSocketHandler)
 }

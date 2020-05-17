@@ -72,7 +72,7 @@ var appFileVariables = new Vue({
             }
         },
         variableadd: function(index){
-            axios.post('/variable/add', {
+            axios.post('/variable-read/add', {
                     Board: 1,
                     Name: appFileVariables.lists[index].Name,
                     Type: appFileVariables.lists[index].Type,
@@ -92,7 +92,7 @@ var appFileVariables = new Vue({
                     console.log(error);
                 })
                 .then(function () {
-                    axios.get('/variable')
+                    axios.get('/variable-read/list')
                         .then(function (response) {
                             appVariableList.lists=response.data.Variables
                         })
@@ -102,7 +102,7 @@ var appFileVariables = new Vue({
                 });
         },
         variablemodadd: function(index){
-            axios.post('/variable/modadd', {
+            axios.post('/variable-modi/add', {
                     Board: 1,
                     Name: appFileVariables.lists[index].Name,
                     Type: appFileVariables.lists[index].Type,
@@ -122,7 +122,7 @@ var appFileVariables = new Vue({
                     console.log(error);
                 })
                 .then(function () {
-                    axios.get('/variable/modlist')
+                    axios.get('/variable-modi/list')
                         .then(function (response) {
                             appVariableModList.lists=response.data.Variables
                         })

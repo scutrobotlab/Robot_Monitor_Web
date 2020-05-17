@@ -3,9 +3,9 @@ package filehandle
 import "os"
 
 type ConfigT struct {
-	IsSaveDataAddr        bool
-	IsSaveVariablesToMod  bool
-	IsSaveVariablesToRead bool
+	IsSaveDataAddr     bool
+	IsSaveVariableModi bool
+	IsSaveVariableRead bool
 }
 
 var Config ConfigT
@@ -13,8 +13,8 @@ var Config ConfigT
 func LoadConfig() {
 	if _, err := os.Stat("Config.json"); os.IsNotExist(err) {
 		Config.IsSaveDataAddr = true
-		Config.IsSaveVariablesToMod = true
-		Config.IsSaveVariablesToRead = true
+		Config.IsSaveVariableModi = true
+		Config.IsSaveVariableRead = true
 	} else {
 		jsonLoad("Config.json", &Config)
 	}
@@ -27,10 +27,10 @@ func SaveConfig() {
 	} else {
 		jsonSave("DataAddr.json", ProjectVariables)
 	}
-	if !Config.IsSaveVariablesToMod {
+	if !Config.IsSaveVariableModi {
 		os.Remove("VariablesToMod.json")
 	}
-	if !Config.IsSaveVariablesToRead {
+	if !Config.IsSaveVariableRead {
 		os.Remove("VariablesToRead.json")
 	}
 }

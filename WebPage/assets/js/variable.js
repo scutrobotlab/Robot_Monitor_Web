@@ -12,7 +12,7 @@ var appVariableList = new Vue({
     },
     methods :{
         variabledel: function(index){
-            axios.post('/variable/del', {
+            axios.post('/variable-read/del', {
                 Board: 1,
                 Name: appVariableList.lists[index].Name,
                 Type: appVariableList.lists[index].Type,
@@ -32,7 +32,7 @@ var appVariableList = new Vue({
                 console.log(error);
             })
             .then(function () {
-                axios.get('/variable')
+                axios.get('/variable-read/list')
                     .then(function (response) {
                         appVariableList.lists=response.data.Variables
                     })
@@ -43,7 +43,7 @@ var appVariableList = new Vue({
         }
     }
 })
-axios.get('/variable')
+axios.get('/variable-read/list')
     .then(function (response) {
         appVariableList.lists=response.data.Variables
     })
@@ -62,7 +62,7 @@ var appVariableAdd = new Vue({
     },
     methods :{
         variableadd: function(event){
-            axios.post('/variable/add', {
+            axios.post('/variable-read/add', {
                     Board: 1,
                     Name: appVariableAdd.Name,
                     Type: appVariableAdd.selected,
@@ -82,7 +82,7 @@ var appVariableAdd = new Vue({
                     console.log(error);
                 })
                 .then(function () {
-                    axios.get('/variable')
+                    axios.get('/variable-read/list')
                         .then(function (response) {
                             appVariableList.lists=response.data.Variables
                         })
@@ -101,7 +101,7 @@ var appVariableModList = new Vue({
     },
     methods :{
         variablemoddel: function(index){
-            axios.post('/variable/moddel', {
+            axios.post('/variable-modi/del', {
                 Board: 1,
                 Name: appVariableModList.lists[index].Name,
                 Type: appVariableModList.lists[index].Type,
@@ -121,7 +121,7 @@ var appVariableModList = new Vue({
                 console.log(error);
             })
             .then(function () {
-                axios.get('/variable/modlist')
+                axios.get('/variable-modi/list')
                     .then(function (response) {
                         appVariableModList.lists=response.data.Variables
                     })
@@ -131,7 +131,7 @@ var appVariableModList = new Vue({
             });
         },
         variablemod: function(index){
-            axios.post('/variable/mod', {
+            axios.post('/variable-modi/mod', {
                 Board: 1,
                 Name: appVariableModList.lists[index].Name,
                 Type: appVariableModList.lists[index].Type,
@@ -149,7 +149,7 @@ var appVariableModList = new Vue({
                 console.log(error);
             })
             .then(function () {
-                axios.get('/variable/modlist')
+                axios.get('/variable-modi/list')
                     .then(function (response) {
                         appVariableModList.lists=response.data.Variables
                     })
@@ -160,7 +160,7 @@ var appVariableModList = new Vue({
         }
     }
 })
-axios.get('/variable/modlist')
+axios.get('/variable-modi/list')
     .then(function (response) {
         appVariableModList.lists=response.data.Variables
     })
@@ -180,7 +180,7 @@ var appVariableModAdd = new Vue({
     },
     methods :{
         variablemodadd: function(event){
-            axios.post('/variable/modadd', {
+            axios.post('/variable-modi/add', {
                     Board: 1,
                     Name: appVariableModAdd.Name,
                     Type: appVariableModAdd.selected,
@@ -200,7 +200,7 @@ var appVariableModAdd = new Vue({
                     console.log(error);
                 })
                 .then(function () {
-                    axios.get('/variable/modlist')
+                    axios.get('/variable-modi/list')
                         .then(function (response) {
                             appVariableModList.lists=response.data.Variables
                         })
