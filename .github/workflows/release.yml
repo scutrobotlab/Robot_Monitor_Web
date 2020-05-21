@@ -17,6 +17,12 @@ jobs:
           go-version: ^1.13
         id: go
 
+      - name: Set up node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+        id: node
+
       - name: Checkout code
         uses: actions/checkout@v2
 
