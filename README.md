@@ -1,6 +1,6 @@
 # 上位机 · 网页版
 
-![Go](https://github.com/scutrobotlab/Robot_Monitor_Web/workflows/Go/badge.svg) ![Release](https://github.com/scutrobotlab/Robot_Monitor_Web/workflows/Release/badge.svg)
+![Go](https://github.com/scutrobotlab/Robot_Monitor_Web/workflows/Go/badge.svg) ![Node.js](https://github.com/scutrobotlab/Robot_Monitor_Web/workflows/Node.js/badge.svg) ![Release](https://github.com/scutrobotlab/Robot_Monitor_Web/workflows/Release/badge.svg)
 
 >~~你所用过坠好的上位机~~  
 >~~简洁、优雅且好用~~  
