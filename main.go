@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	filehandle "Robot_Monitor_Web/FileHandle"
-	serialhandle "Robot_Monitor_Web/SerialHandle"
-	webhandle "Robot_Monitor_Web/WebHandle"
+	filehandle "Robot_Monitor_Web/backend/FileHandle"
+	serialhandle "Robot_Monitor_Web/backend/SerialHandle"
+	webhandle "Robot_Monitor_Web/backend/WebHandle"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 			filehandle.SaveAll()
 		}
 	}()
-	http.Handle("/", http.FileServer(http.Dir("./WebPage/")))
+	http.Handle("/", http.FileServer(http.Dir("./frontend/dist/")))
 	webhandle.Reg()
 	port := ""
 	if len(os.Args) > 1 {
