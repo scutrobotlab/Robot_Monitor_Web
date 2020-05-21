@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	datapack "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
+	datapack "Robot_Monitor_Web/DataPack"
 )
 
 func jsonLoad(filename string, v interface{}) {

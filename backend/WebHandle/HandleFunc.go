@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	datapack "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
-	filehandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/FileHandle"
+	datapack "Robot_Monitor_Web/DataPack"
+	filehandle "Robot_Monitor_Web/FileHandle"
 
-	serialhandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/SerialHandle"
+	serialhandle "Robot_Monitor_Web/SerialHandle"
 )
 
 func currentSerialPortWebHandler(w http.ResponseWriter, _ *http.Request) {

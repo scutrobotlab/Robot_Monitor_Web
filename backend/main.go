@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	filehandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/FileHandle"
-	serialhandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/SerialHandle"
-	webhandle "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/WebHandle"
+	filehandle "Robot_Monitor_Web/FileHandle"
+	serialhandle "Robot_Monitor_Web/SerialHandle"
+	webhandle "Robot_Monitor_Web/WebHandle"
 )
 
 func main() {

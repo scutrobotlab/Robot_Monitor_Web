@@ -8,7 +8,7 @@ import (
 
 	"go.bug.st/serial.v1"
 
-	datapack "www.scut-robotlab.cn/git/M3chD09/Robot_Monitor_Web/DataPack"
+	datapack "Robot_Monitor_Web/DataPack"
 )
 
 type testPort struct {
