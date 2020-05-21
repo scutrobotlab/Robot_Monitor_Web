@@ -6,7 +6,7 @@
           <v-list-item-avatar>
             <img
               src="@/assets/logo.jpg"
-              alt="John"
+              alt="Logo"
             >
           </v-list-item-avatar>
           <v-list-item-content>
