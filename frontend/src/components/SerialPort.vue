@@ -42,13 +42,14 @@
       serialList:[]
     }),
     mounted() {
+      this.getSerialList()
       this.getSerial()
     },
     methods :{
       getSerialList(){
         axios.get('/serial/list')
         .then(response =>{
-            this.serialList = response.data.Ports
+          this.serialList = response.data.Ports
         })
       },
       getSerial(){
