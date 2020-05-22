@@ -1,84 +1,84 @@
 export default {
   'GET /serial/list': {
-    Ports:[
-        "COM3",
-        "Broken Port"
+    Ports: [
+      "COM3",
+      "Broken Port"
     ]
   },
   'GET /serial': {
-    Name:null,
-    BaudRate:0
+    Name: null,
+    BaudRate: 0
   },
   'GET /serial/open': function (req, res) {
     let query = req.query || {};
-    if (query.port=="Broken Port"){
+    if (query.port == "Broken Port") {
       return res.json({
-        status:11
+        status: 11
       });
-    }else if(query.port==null){
+    } else if (query.port == null) {
       return res.json({
-        status:1
+        status: 1
       });
-    }else {
+    } else {
       return res.json({
-        status:0
+        status: 0
       });
     }
   },
   'GET /serial/close': {
-    status:0
+    status: 0
   },
 
   'GET /variable/types': {
-    Types:[
-      "double","float","int","int16_t","int32_t","int64_t","int8_t","uint16_t","uint32_t","uint64_t","uint8_t"
+    Types: [
+      "double", "float", "int", "int16_t", "int32_t", "int64_t", "int8_t", "uint16_t", "uint32_t", "uint64_t", "uint8_t"
     ]
   },
   'GET /file/variables': {
     Variables: [
       {
-        Addr:"0x20002020",
-        Size:"4",
-        Name:"yaw",
-        Type:"float"
+        Addr: "0x20002020",
+        Size: "4",
+        Name: "yaw",
+        Type: "float"
       },
       {
-        Addr:"0x200060be",
-        Size:"8",
-        Name:"yaw_send",
-        Type:"double"
+        Addr: "0x200060be",
+        Size: "8",
+        Name: "yaw_send",
+        Type: "double"
       },
       {
-        Addr:"0x2000ac50",
-        Size:"4",
-        Name:"temp",
-        Type:"int"
+        Addr: "0x2000ac50",
+        Size: "4",
+        Name: "temp",
+        Type: "int"
       },
     ]
   },
   'GET /variable-read/list': {
     Variables: [
       {
-        Board:1,
-        Name:"yaw",
-        Type:"float",
-        Addr:536889920,
-        Data:0,
-        Tick:0
+        Board: 1,
+        Name: "yaw",
+        Type: "float",
+        Addr: 536889920,
+        Data: 0,
+        Tick: 0
       },
       {
-        Board:1,
-        Name:"yaw_send",
-        Type:"double",
-        Addr:536889820,
-        Data:0,
-        Tick:0
+        Board: 1,
+        Name: "yaw_send",
+        Type: "double",
+        Addr: 536889820,
+        Data: 0,
+        Tick: 0
       }
     ]
   },
   'POST /variable-read/add': (req, res) => {
     const { Board, Name, Type, Addr } = req.body;
-    if(Name=='bad'){
+    if (Name == 'bad') {
       return res.json({
         status: 22
       })
@@ -89,7 +89,7 @@ export default {
   },
   'POST /variable-read/del': (req, res) => {
     const { Board, Name, Type, Addr } = req.body;
-    if(Name=='yaw'){
+    if (Name == 'yaw') {
       return res.json({
         status: 22
       })
@@ -101,20 +101,20 @@ export default {
   'GET /variable-modi/list': {
     Variables: [
       {
-        Board:1,
-        Name:"kp",
-        Type:"float",
-        Addr:536883920,
-        Data:0,
-        Tick:0
+        Board: 1,
+        Name: "kp",
+        Type: "float",
+        Addr: 536883920,
+        Data: 0,
+        Tick: 0
       },
       {
-        Board:1,
-        Name:"ki",
-        Type:"double",
-        Addr:536882920,
-        Data:0,
-        Tick:0
+        Board: 1,
+        Name: "ki",
+        Type: "double",
+        Addr: 536882920,
+        Data: 0,
+        Tick: 0
       }
     ]
   },

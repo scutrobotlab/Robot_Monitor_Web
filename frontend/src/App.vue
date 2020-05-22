@@ -1,53 +1,37 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
-      <DrawerList/>
+    <v-navigation-drawer v-model="drawer" app>
+      <DrawerList />
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      dark
-      color="primary"
-    >
+    <v-app-bar app dark color="primary">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>坠好用的上位机</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-switch
-        v-model="$vuetify.theme.dark"
-        hide-details
-        inset
-        color="black"
-        label="深色模式"
-      ></v-switch>
+      <v-switch v-model="$vuetify.theme.dark" hide-details inset color="black" label="深色模式"></v-switch>
     </v-app-bar>
 
     <v-content>
       <router-view></router-view>
     </v-content>
 
-    <v-footer
-      app
-      color="primary"
-    >
+    <v-footer app color="primary">
       <span class="white--text">华工机器人实验室</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-  import DrawerList from "@/components/DrawerList.vue"
-  export default {
-    components: {
-      DrawerList,
-    },
-    props: {
-      source: String,
-    },
-    data: () => ({
-      drawer: null,
-    }),
-  }
+import DrawerList from "@/components/DrawerList.vue";
+export default {
+  components: {
+    DrawerList
+  },
+  props: {
+    source: String
+  },
+  data: () => ({
+    drawer: null
+  })
+};
 </script>

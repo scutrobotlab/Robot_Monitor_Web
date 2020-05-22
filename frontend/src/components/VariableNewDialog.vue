@@ -15,7 +15,7 @@
               <v-row>
                 <v-col cols="12" sm="6" md="6">
                   <v-select
-                    :items=[1,2,3]
+                    :items="[1,2,3]"
                     label="板子代号"
                     hint="保持默认为1即可"
                     :rules="[v => !!v || '板子代号是必要的']"
@@ -32,11 +32,24 @@
                     v-model="Type"
                   ></v-select>
                 </v-col>
-                 <v-col cols="12" sm="6" md="6">
-                  <v-text-field label="变量名" type="text" :rules="[v => !!v || '变量名是必要的']" required v-model="Name"></v-text-field>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field
+                    label="变量名"
+                    type="text"
+                    :rules="[v => !!v || '变量名是必要的']"
+                    required
+                    v-model="Name"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  <v-text-field label="变量地址" type="text" :rules="AddrRules" hint="形如2000ab78" required v-model="Addr"></v-text-field>
+                  <v-text-field
+                    label="变量地址"
+                    type="text"
+                    :rules="AddrRules"
+                    hint="形如2000ab78"
+                    required
+                    v-model="Addr"
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-form>
@@ -49,64 +62,62 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <Notice ref="notice"/>
+    <Notice ref="notice" />
   </v-row>
 </template>
 
 <script>
-  import axios from "axios";
-  import Notice from "@/components/Notice.vue"
-  export default {
-    components:{
-      Notice
+import axios from "axios";
+import Notice from "@/components/Notice.vue";
+export default {
+  components: {
+    Notice
+  },
+  props: ["opt"],
+  data: () => ({
+    dialog: false,
+    valid: true,
+    types: [],
+    Board: 1,
+    Name: "",
+    Type: "",
+    Addr: "",
+    AddrRules: [
+      v => !!v || "变量地址是必要的",
+      v => /2[0-9a-f]{7}/.test(v) || "格式错误，应形如2000ab78"
+    ]
+  }),
+  mounted() {
+    axios.get("/variable/types").then(response => {
+      this.types = response.data.Types;
+    });
+  },
+  methods: {
+    openDialog() {
+      this.dialog = true;
     },
-    props: [
-      'opt'
-    ],
-    data: () => ({
-      dialog: false,
-      valid: true,
-      types: [],
-      Board: 1,
-      Name: '',
-      Type: '',
-      Addr: '',
-      AddrRules: [
-        v => !!v || '变量地址是必要的',
-        v => /2[0-9a-f]{7}/.test(v) || '格式错误，应形如2000ab78',
-      ]
-    }),
-    mounted(){
-      axios.get('/variable/types')
-      .then(response =>{
-        this.types = response.data.Types
-      })
-    },
-    methods:{
-      openDialog(){
-        this.dialog = true
-      },
-      addVariable(){
-        if (this.$refs.form.validate()){
-          axios.post('/variable-'+this.opt+'/add', {
-              Board: 1,
-              Name: this.Name,
-              Type: this.Type,
-              Addr: parseInt(this.Addr,16),
+    addVariable() {
+      if (this.$refs.form.validate()) {
+        axios
+          .post("/variable-" + this.opt + "/add", {
+            Board: 1,
+            Name: this.Name,
+            Type: this.Type,
+            Addr: parseInt(this.Addr, 16)
           })
-          .then(response =>{
-            if (response.data.status==0){
-              this.dialog = false
-              this.$refs.notice.show('变量添加成功',0)
-              this.$emit('getVariables')
-            }else if (response.data.status==22){
-              this.$refs.notice.show('变量操作时串口错误',1)
-            }else if (response.data.status==23){
-              this.$refs.notice.show('重复添加变量',1)
+          .then(response => {
+            if (response.data.status == 0) {
+              this.dialog = false;
+              this.$refs.notice.show("变量添加成功", 0);
+              this.$emit("getVariables");
+            } else if (response.data.status == 22) {
+              this.$refs.notice.show("变量操作时串口错误", 1);
+            } else if (response.data.status == 23) {
+              this.$refs.notice.show("重复添加变量", 1);
             }
-          })
-        }
-      },
+          });
+      }
     }
   }
+};
 </script>

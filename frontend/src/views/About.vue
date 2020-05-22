@@ -4,19 +4,14 @@
       <v-card max-width="500" class="mx-auto">
         <v-list-item>
           <v-list-item-avatar>
-            <img
-              src="@/assets/logo.jpg"
-              alt="Logo"
-            >
+            <img src="@/assets/logo.jpg" alt="Logo" />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title class="headline">华工机器人实验室巨献</v-list-item-title>
             <v-list-item-subtitle>SCUT Robot Lab Present</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-        <v-card-text>
-
-        </v-card-text>
+        <v-card-text></v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn icon href="https://github.com/scutrobotlab/Robot_Monitor_Web">
@@ -32,9 +27,9 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      hc:''
-    }),
-  }
+export default {
+  data: () => ({
+    hc: ""
+  })
+};
 </script>
