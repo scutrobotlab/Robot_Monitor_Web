@@ -1,11 +1,9 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
-      <DrawerList />
-    </v-navigation-drawer>
+    <DrawerList ref="DrawerList" />
 
     <v-app-bar app dark color="primary">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="switchDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>坠好用的上位机</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-switch v-model="$vuetify.theme.dark" hide-details inset color="black" label="深色模式"></v-switch>
@@ -30,8 +28,10 @@ export default {
   props: {
     source: String
   },
-  data: () => ({
-    drawer: null
-  })
+  methods: {
+    switchDrawer() {
+      this.$refs.DrawerList.switchDrawer();
+    }
+  }
 };
 </script>

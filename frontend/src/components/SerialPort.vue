@@ -1,26 +1,23 @@
 <template>
-  <v-card>
-    <v-card-title>串口</v-card-title>
-    <v-card-text>
-      <v-row>
-        <v-col cols="9">
-          <v-select
-            prepend-icon="mdi-serial-port"
-            :items="serialList"
-            v-model="serial"
-            v-on:click="getSerialList()"
-            v-bind:disabled="status"
-            label="选择串口"
-            solo
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-switch v-model="status" v-on:change="optSerial()" inset></v-switch>
-        </v-col>
-        <Notice ref="notice" />
-      </v-row>
-    </v-card-text>
-  </v-card>
+  <v-list>
+    <v-list-item>
+      <v-list-item-title>串口</v-list-item-title>
+    </v-list-item>
+    <v-list-item>
+      <v-select
+        prepend-icon="mdi-serial-port"
+        :items="serialList"
+        v-model="serial"
+        v-on:click="getSerialList()"
+        v-bind:disabled="status"
+        label="选择串口"
+      ></v-select>
+      <v-list-item-action>
+        <v-switch v-model="status" v-on:change="optSerial()" inset></v-switch>
+      </v-list-item-action>
+    </v-list-item>
+    <Notice ref="notice" />
+  </v-list>
 </template>
 
 <script>

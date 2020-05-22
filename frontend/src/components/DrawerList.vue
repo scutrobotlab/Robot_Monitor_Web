@@ -1,41 +1,52 @@
 <template>
-  <v-list dense>
-    <v-list-item link v-for="item in items" :key="item.text" v-bind:to="item.link">
-      <v-list-item-action>
-        <v-icon>{{item.icon}}</v-icon>
-      </v-list-item-action>
-      <v-list-item-content>
-        <v-list-item-title>{{item.text}}</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-  </v-list>
+  <v-navigation-drawer width="300" v-model="drawer" app>
+    <SerialPort />
+
+    <v-list>
+      <v-list-item>
+        <v-list-item-title>读取变量列表</v-list-item-title>
+        <v-spacer></v-spacer>
+        <v-list-item-icon>
+          <v-btn color="secondary" fab v-on:click="openDialog()">
+            <v-icon>mdi-file-upload</v-icon>
+          </v-btn>
+        </v-list-item-icon>
+      </v-list-item>
+    </v-list>
+
+    <VariableList showtext="观察" ref="cardRead" />
+    <VariableList showtext="修改" ref="cardModi" />
+    <SaveConfig />
+    <VariableAllDialog ref="VariableAllDialog" @getAllV="getAllV" />
+  </v-navigation-drawer>
 </template>
 
 <script>
+import SerialPort from "@/components/SerialPort.vue";
+import SaveConfig from "@/components/SaveConfig.vue";
+import VariableList from "@/components/VariableList.vue";
+import VariableAllDialog from "@/components/VariableAllDialog.vue";
 export default {
+  components: {
+    SerialPort,
+    SaveConfig,
+    VariableList,
+    VariableAllDialog
+  },
   data: () => ({
-    items: [
-      {
-        link: "/",
-        icon: "mdi-home",
-        text: "开始"
-      },
-      {
-        link: "/variables",
-        icon: "mdi-variable",
-        text: "变量"
-      },
-      {
-        link: "/chart",
-        icon: "mdi-chart-bell-curve-cumulative",
-        text: "图表"
-      },
-      {
-        link: "/about",
-        icon: "mdi-information",
-        text: "关于"
-      }
-    ]
-  })
+    drawer: null
+  }),
+  methods: {
+    switchDrawer() {
+      this.drawer = !this.drawer;
+    },
+    openDialog() {
+      this.$refs.VariableAllDialog.openDialog();
+    },
+    getAllV() {
+      this.$refs.cardRead.getVariables();
+      this.$refs.cardModi.getVariables();
+    }
+  }
 };
 </script>

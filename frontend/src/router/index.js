@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Variables from '../views/Variables.vue'
-import Chart from '../views/Chart.vue'
 
 Vue.use(VueRouter)
 
@@ -11,16 +9,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
-  },
-  {
-    path: '/variables',
-    name: 'Variables',
-    component: Variables
-  },
-  {
-    path: '/chart',
-    name: 'Chart',
-    component: Chart
   },
   {
     path: '/about',

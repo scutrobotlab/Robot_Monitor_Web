@@ -1,24 +1,21 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="6" md="6">
-        <SerialPort />
+      <v-col cols="12">
+        <ChartCard />
       </v-col>
-
-      <v-col cols="12" sm="6" md="6">
-        <SaveConfig />
-      </v-col>
+      <PanelCard />
     </v-row>
   </v-container>
 </template>
 
 <script>
-import SerialPort from "@/components/SerialPort.vue";
-import SaveConfig from "@/components/SaveConfig.vue";
+import ChartCard from "@/components/ChartCard.vue";
+import PanelCard from "@/components/PanelCard.vue";
 export default {
   components: {
-    SaveConfig,
-    SerialPort
+    ChartCard,
+    PanelCard
   }
 };
 </script>

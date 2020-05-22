@@ -1,17 +1,12 @@
 <template>
-  <v-card>
-    <v-card-title>保存选项</v-card-title>
-    <v-card-text>
-      <v-switch
-        v-for="i in config"
-        :key="i.n"
-        v-model="i.v"
-        :label="i.t"
-        v-on:change="updateConfig(i.n,i.v)"
-        inset
-      ></v-switch>
-    </v-card-text>
-  </v-card>
+  <v-list>
+    <v-list-item>
+      <v-list-item-title>保存选项</v-list-item-title>
+    </v-list-item>
+    <v-list-item v-for="i in config" :key="i.n">
+      <v-switch v-model="i.v" :label="i.t" v-on:change="updateConfig(i.n,i.v)" inset></v-switch>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script>

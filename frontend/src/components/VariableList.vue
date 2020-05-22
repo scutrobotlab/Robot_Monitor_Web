@@ -1,31 +1,44 @@
 <template>
-  <v-card>
-    <v-toolbar dense>
-      <v-toolbar-title>变量·{{showtext}}</v-toolbar-title>
+  <v-list>
+    <v-list-item>
+      <v-list-item-title>变量·{{showtext}}</v-list-item-title>
       <v-spacer></v-spacer>
-      <v-btn icon v-on:click="openDialog()">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-card-text>
-      <v-expansion-panels focusable>
-        <v-expansion-panel v-for="i in variables" :key="i.Name">
-          <v-expansion-panel-header>{{i.Name}}</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-icon>mdi-tag-multiple</v-icon>
-            {{i.Type}}
-            <v-icon>mdi-view-list</v-icon>
-            {{hexdsp(i.Addr)}}
-            <v-btn icon absolute small right v-on:click="delVariable(i)">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-card-text>
+      <v-list-item-icon>
+        <v-btn icon v-on:click="openDialog()">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-list-item-icon>
+    </v-list-item>
+
+    <v-list-group v-for="i in variables" :key="i.Name">
+      <template v-slot:activator>
+        <v-list-item-icon>
+          <v-icon>mdi-variable</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>{{i.Name}}</v-list-item-title>
+        </v-list-item-content>
+      </template>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>mdi-tag-multiple</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>{{i.Type}}</v-list-item-content>
+        <v-btn icon absolute small right v-on:click="delVariable(i)">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>mdi-view-list</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>{{hexdsp(i.Addr)}}</v-list-item-content>
+      </v-list-item>
+    </v-list-group>
     <VariableNewDialog @getVariables="getVariables" ref="VariableNewDialog" v-bind:opt="opt" />
     <Notice ref="notice" />
-  </v-card>
+  </v-list>
 </template>
 
 <script>
