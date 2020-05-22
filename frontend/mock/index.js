@@ -130,6 +130,12 @@ export default {
       status: 0
     })
   },
+  'POST /variable-modi/mod': (req, res) => {
+    const { Board, Name, Type, Addr, Data } = req.body;
+    return res.json({
+      status: 0
+    })
+  },
 
   'POST /file/upload': (req, res) => {
     return res.json({

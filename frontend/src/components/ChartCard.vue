@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <div id="chart" style="width: 100%; height: 500px;"></div>
+    <div id="chart" style="width: 100%; height: 420px;"></div>
     <Notice ref="notice" />
   </v-card>
 </template>
