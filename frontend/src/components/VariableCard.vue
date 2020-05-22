@@ -18,13 +18,13 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-icon>mdi-tag-multiple</v-icon>{{i.Type}}
-            <v-icon>mdi-view-list</v-icon>{{i.Addr}}
+            <v-icon>mdi-view-list</v-icon>{{hexdsp(i.Addr)}}
             <v-btn icon absolute small right v-on:click="delVariable(i)"><v-icon>mdi-delete</v-icon></v-btn>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
     </v-card-text>
-    <VariableNewDialog ref="VariableNewDialog" v-bind:opt="opt"/>
+    <VariableNewDialog @getVariables="getVariables" ref="VariableNewDialog" v-bind:opt="opt"/>
     <Notice ref="notice"/>
   </v-card>
 </template>
@@ -53,6 +53,12 @@
       openDialog(){
         this.$refs.VariableNewDialog.openDialog()
       },
+      hexdsp(i){
+        var h = i.toString(16)
+        var l = h.length
+        var z = new Array(9-l).join("0")
+        return "0x"+z+h
+      },
       getVariables(){
         axios.get('/variable-'+this.opt+'/list')
         .then(response =>{
@@ -61,10 +67,10 @@
       },
       delVariable(i){
         axios.post('/variable-'+this.opt+'/del', {
-            Board: i.Board,
+            Board: 1,
             Name: i.Name,
             Type: i.Type,
-            Addr: parseInt(i.Addr,16),
+            Addr: i.Addr,
         })
         .then(response =>{
           if (response.data.status==0){

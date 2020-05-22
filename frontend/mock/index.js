@@ -62,7 +62,7 @@ export default {
         Board:1,
         Name:"yaw",
         Type:"float",
-        Addr:"0x20002020",
+        Addr:536889920,
         Data:0,
         Tick:0
       },
@@ -70,7 +70,7 @@ export default {
         Board:1,
         Name:"yaw_send",
         Type:"double",
-        Addr:"0x200060be",
+        Addr:536889820,
         Data:0,
         Tick:0
       }
@@ -104,7 +104,7 @@ export default {
         Board:1,
         Name:"kp",
         Type:"float",
-        Addr:"0x20002070",
+        Addr:536883920,
         Data:0,
         Tick:0
       },
@@ -112,7 +112,7 @@ export default {
         Board:1,
         Name:"ki",
         Type:"double",
-        Addr:"0x200020a0",
+        Addr:536882920,
         Data:0,
         Tick:0
       }

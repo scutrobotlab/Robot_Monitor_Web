@@ -98,6 +98,7 @@
             if (response.data.status==0){
               this.dialog = false
               this.$refs.notice.show('变量添加成功',0)
+              this.$emit('getVariables')
             }else if (response.data.status==22){
               this.$refs.notice.show('变量操作时串口错误',1)
             }else if (response.data.status==23){
