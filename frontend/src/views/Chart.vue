@@ -2,17 +2,17 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <Chart />
+        <ChartCard />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import Chart from "@/components/Chart.vue";
+import ChartCard from "@/components/ChartCard.vue";
 export default {
   components: {
-    Chart
+    ChartCard
   }
 };
 </script>
