@@ -32,9 +32,6 @@ func main() {
 		}
 	}()
 	http.Handle("/", http.FileServer(http.Dir("./frontend/dist/")))
-	for _, v := range []string{"/about", "/chart", "/variables"} {
-		http.Handle(v, http.StripPrefix(v, http.FileServer(http.Dir("./frontend/dist/"))))
-	}
 	webhandle.Reg()
 	port := ""
 	if len(os.Args) > 1 {
