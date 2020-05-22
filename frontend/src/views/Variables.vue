@@ -2,17 +2,17 @@
   <v-container>
     <v-row>
       <v-col cols="12" sm="6" md="6">
-        <VariableCard showtext="观察" />
+        <VariableCard showtext="观察" ref="cardRead" />
       </v-col>
 
       <v-col cols="12" sm="6" md="6">
-        <VariableCard showtext="修改" />
+        <VariableCard showtext="修改" ref="cardModi" />
       </v-col>
 
       <v-btn color="secondary" dark absolute bottom right fab v-on:click="openDialog()">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
-      <VariableAllDialog ref="VariableAllDialog" />
+      <VariableAllDialog ref="VariableAllDialog" @getAllV="getAllV" />
     </v-row>
   </v-container>
 </template>
@@ -28,6 +28,10 @@ export default {
   methods: {
     openDialog() {
       this.$refs.VariableAllDialog.openDialog();
+    },
+    getAllV() {
+      this.$refs.cardRead.getVariables();
+      this.$refs.cardModi.getVariables();
     }
   }
 };

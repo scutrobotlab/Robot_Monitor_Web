@@ -3,13 +3,12 @@
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card>
         <v-toolbar dark color="primary">
-          <v-toolbar-title>变量列表</v-toolbar-title>
-          <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn icon dark @click="dialog = false">
+            <v-btn icon dark v-on:click="closeDialog">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-toolbar-items>
+          <v-toolbar-title>变量列表</v-toolbar-title>
         </v-toolbar>
         <v-row>
           <v-col cols="4">
@@ -116,6 +115,10 @@ export default {
   methods: {
     openDialog() {
       this.dialog = true;
+    },
+    closeDialog() {
+      this.$emit("getAllV");
+      this.dialog = false;
     },
     getVariableList() {
       axios.get("/file/variables").then(response => {
