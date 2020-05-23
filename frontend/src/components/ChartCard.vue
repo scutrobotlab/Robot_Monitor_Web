@@ -5,21 +5,38 @@
 </template>
 <script>
 import timechart from "timechart";
+import colors from "vuetify/lib/util/colors";
 export default {
   data: () => ({
     ws: null,
     chart: null,
-    iColor: 0,
-    colors: [
-      "#F44336",
-      "#9C27B0",
-      "#3F51B5",
-      "#00BCD4",
-      "#4CAF50",
-      "#FF9800",
-      "#795548"
-    ]
+    indexColor: 0,
+    lineColors: {
+      light: [
+        colors.red.lighten1,
+        colors.green.lighten1,
+        colors.orange.lighten1,
+        colors.purple.lighten1,
+        colors.indigo.lighten1,
+        colors.teal.lighten1,
+        colors.pink.lighten1
+      ],
+      dark: [
+        colors.red.darken4,
+        colors.green.darken4,
+        colors.orange.darken4,
+        colors.purple.darken4,
+        colors.indigo.darken4,
+        colors.teal.darken4,
+        colors.pink.darken4
+      ]
+    }
   }),
+  computed: {
+    isDark() {
+      return this.$vuetify.theme.dark;
+    }
+  },
   created() {
     this.initWS();
   },
@@ -35,9 +52,28 @@ export default {
       realTime: true
     });
   },
+  watch: {
+    isDark: function() {
+      if (this.isDark) {
+        for (var i in this.chart.options.series) {
+           this.chart.options.series[i].color = this.lineColors.dark[i];
+        }
+      } else {
+        for (i in this.chart.options.series) {
+           this.chart.options.series[i].color = this.lineColors.light[i];
+        }
+      }
+      this.chart.update();
+    }
+  },
   methods: {
     initWS() {
-      this.ws = new WebSocket((document.location.protocol=='https:'?'wss':'ws')+"://" + window.location.host + "/ws");
+      this.ws = new WebSocket(
+        (document.location.protocol == "https:" ? "wss" : "ws") +
+          "://" +
+          window.location.host +
+          "/ws"
+      );
       this.ws.onopen = this.WSonopen;
       this.ws.onclose = this.WSclose;
       this.ws.onmessage = this.WSonmessage;
@@ -55,6 +91,15 @@ export default {
     WSonerror(evt) {
       console.log("ERROR: " + evt.data);
     },
+    selectColor() {
+      this.indexColor++;
+      this.indexColor == this.lineColors.light.length ? 0 : this.indexColor;
+      if (this.$vuetify.theme.dark) {
+        return this.lineColors.dark[this.indexColor];
+      } else {
+        return this.lineColors.light[this.indexColor];
+      }
+    },
     praseWS(data) {
       if (data != "") {
         const jsonWS = JSON.parse(data);
@@ -68,9 +113,10 @@ export default {
               y: jsonWS.DataPack[i].Data
             });
           } else {
+            const color = this.selectColor();
             this.chart.options.series.push({
               name: jsonWS.DataPack[i].Name,
-              color: this.colors[this.iColor],
+              color: color,
               data: [{ x: jsonWS.DataPack[i].Tick, y: jsonWS.DataPack[i].Data }]
             });
             this.iColor++;
