@@ -1,16 +1,11 @@
 <template>
   <v-card>
     <div id="chart" style="width: 100%; height: 420px;"></div>
-    <Notice ref="notice" />
   </v-card>
 </template>
 <script>
 import timechart from "timechart";
-import Notice from "@/components/Notice.vue";
 export default {
-  components: {
-    Notice
-  },
   data: () => ({
     ws: null,
     chart: null,
@@ -49,10 +44,10 @@ export default {
       this.ws.onerror = this.WSonerror;
     },
     WSonopen() {
-      this.$refs.notice.show("连接成功", 0);
+      this.$toasted.show("连接成功");
     },
     WSclose() {
-      this.$refs.notice.show("连接断开", 1);
+      this.$toasted.error("连接断开");
     },
     WSonmessage(evt) {
       this.praseWS(evt.data);

@@ -13,6 +13,7 @@
     "timechart": "^0.3.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
+    "vue-toasted": "^1.1.28",
     "vuetify": "^2.2.11",
     "webpack": "^4.43.0"
   },

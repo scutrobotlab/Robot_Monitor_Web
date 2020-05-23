@@ -37,19 +37,16 @@
       </v-list-item>
     </v-list-group>
     <VariableNewDialog @getVariables="getVariables" ref="VariableNewDialog" v-bind:opt="opt" />
-    <Notice ref="notice" />
   </v-list>
 </template>
 
 <script>
 import axios from "axios";
 import VariableNewDialog from "@/components/VariableNewDialog.vue";
-import Notice from "@/components/Notice.vue";
 export default {
   props: ["showtext"],
   components: {
-    VariableNewDialog,
-    Notice
+    VariableNewDialog
   },
   data: () => ({
     opt: "",
@@ -85,11 +82,11 @@ export default {
         .then(response => {
           if (response.data.status == 0) {
             this.getVariables();
-            this.$refs.notice.show("变量删除成功", 0);
+            this.$toasted.show("变量删除成功");
           } else if (response.data.status == 22) {
-            this.$refs.notice.show("变量操作时串口错误", 1);
+            this.$toasted.error("变量操作时串口错误");
           } else if (response.data.status == 24) {
-            this.$refs.notice.show("删除未添加的变量", 1);
+            this.$toasted.error("删除未添加的变量");
           }
         });
     }

@@ -18,7 +18,12 @@
           <v-list-item-group color="primary">
             <v-list-item v-for="i in variables" :key="i.Name">
               <v-list-item-content>
-                <v-text-field dense v-model="i.Data" v-bind:label="i.Name" v-on:keyup.enter="modiVariable(i)"></v-text-field>
+                <v-text-field
+                  dense
+                  v-model="i.Data"
+                  v-bind:label="i.Name"
+                  v-on:keyup.enter="modiVariable(i)"
+                ></v-text-field>
               </v-list-item-content>
               <v-list-item-icon>
                 <v-btn icon v-on:click="modiVariable(i)">
@@ -28,7 +33,6 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-        <Notice ref="notice" />
       </v-card>
     </v-menu>
   </div>
@@ -36,11 +40,7 @@
 
 <script>
 import axios from "axios";
-import Notice from "@/components/Notice.vue";
 export default {
-  components: {
-    Notice
-  },
   data: () => ({
     menu: false,
     variables: []
@@ -68,9 +68,9 @@ export default {
         })
         .then(response => {
           if (response.data.status == 0) {
-            this.$refs.notice.show("变量修改成功", 0);
+            this.$toasted.show("变量修改成功");
           } else if (response.data.status == 22) {
-            this.$refs.notice.show("变量操作时串口错误", 1);
+            this.$toasted.error("变量操作时串口错误");
           }
         });
     }

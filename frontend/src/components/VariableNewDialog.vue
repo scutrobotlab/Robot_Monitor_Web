@@ -62,17 +62,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <Notice ref="notice" />
   </v-row>
 </template>
 
 <script>
 import axios from "axios";
-import Notice from "@/components/Notice.vue";
 export default {
-  components: {
-    Notice
-  },
   props: ["opt"],
   data: () => ({
     dialog: false,
@@ -108,12 +103,12 @@ export default {
           .then(response => {
             if (response.data.status == 0) {
               this.dialog = false;
-              this.$refs.notice.show("变量添加成功", 0);
+              this.$toasted.show("变量添加成功");
               this.$emit("getVariables");
             } else if (response.data.status == 22) {
-              this.$refs.notice.show("变量操作时串口错误", 1);
+              this.$toasted.error("变量操作时串口错误");
             } else if (response.data.status == 23) {
-              this.$refs.notice.show("重复添加变量", 1);
+              this.$toasted.error("重复添加变量");
             }
           });
       }

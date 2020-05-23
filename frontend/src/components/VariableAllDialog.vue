@@ -51,17 +51,12 @@
         </v-simple-table>
       </v-card>
     </v-dialog>
-    <Notice ref="notice" />
   </v-row>
 </template>
 
 <script>
 import axios from "axios";
-import Notice from "@/components/Notice.vue";
 export default {
-  components: {
-    Notice
-  },
   data: () => ({
     dialog: false,
     file: null,
@@ -80,13 +75,13 @@ export default {
       axios.post("/file/upload", param, config).then(response => {
         if (response.data.status == 0) {
           this.getVariableList();
-          this.$refs.notice.show("文件上传成功", 0);
+          this.$toasted.show("文件上传成功");
         } else if (response.data.status == 31) {
-          this.$refs.notice.show("未选择文件", 1);
+          this.$toasted.error("未选择文件");
         } else if (response.data.status == 32) {
-          this.$refs.notice.show("文件写入错误", 1);
+          this.$toasted.error("文件写入错误");
         } else if (response.data.status == 33) {
-          this.$refs.notice.show("文件转换错误", 1);
+          this.$toasted.error("文件转换错误");
         }
       });
     },
@@ -136,11 +131,11 @@ export default {
         })
         .then(response => {
           if (response.data.status == 0) {
-            this.$refs.notice.show("变量添加成功", 0);
+            this.$toasted.show("变量添加成功");
           } else if (response.data.status == 22) {
-            this.$refs.notice.show("变量操作时串口错误", 1);
+            this.$toasted.error("变量操作时串口错误");
           } else if (response.data.status == 23) {
-            this.$refs.notice.show("重复添加变量", 1);
+            this.$toasted.error("重复添加变量");
           }
         });
     },
@@ -154,11 +149,11 @@ export default {
         })
         .then(response => {
           if (response.data.status == 0) {
-            this.$refs.notice.show("变量添加成功", 0);
+            this.$toasted.show("变量添加成功");
           } else if (response.data.status == 22) {
-            this.$refs.notice.show("变量操作时串口错误", 1);
+            this.$toasted.error("变量操作时串口错误");
           } else if (response.data.status == 23) {
-            this.$refs.notice.show("重复添加变量", 1);
+            this.$toasted.error("重复添加变量");
           }
         });
     }
