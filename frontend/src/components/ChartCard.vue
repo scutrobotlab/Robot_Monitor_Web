@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     initWS() {
-      this.ws = new WebSocket("ws://" + window.location.host + "/ws");
+      this.ws = new WebSocket((document.location.protocol=='https:'?'wss':'ws')+"://" + window.location.host + "/ws");
       this.ws.onopen = this.WSonopen;
       this.ws.onclose = this.WSclose;
       this.ws.onmessage = this.WSonmessage;
