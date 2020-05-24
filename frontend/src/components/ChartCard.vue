@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <div id="chart" style="width: 100%; height: 420px;"></div>
+    <div ref="chart" style="width: 100%; height: 420px;"></div>
   </v-card>
 </template>
 <script>
@@ -44,8 +44,7 @@ export default {
     this.ws.close();
   },
   mounted() {
-    const el = document.getElementById("chart");
-    this.chart = new timechart(el, {
+    this.chart = new timechart(this.$refs.chart, {
       baseTime: Date.now() - performance.now(),
       series: [],
       xRange: { min: 0, max: 20 * 1000 },
@@ -56,12 +55,16 @@ export default {
     isDark: function() {
       if (this.isDark) {
         for (var i in this.chart.options.series) {
-           this.chart.options.series[i].color = this.lineColors.dark[i];
+          this.chart.options.series[i].color = this.lineColors.dark[i];
         }
+        this.$refs.chart.querySelector("chart-legend").style.backgroundColor =
+          "black";
       } else {
         for (i in this.chart.options.series) {
-           this.chart.options.series[i].color = this.lineColors.light[i];
+          this.chart.options.series[i].color = this.lineColors.light[i];
         }
+        this.$refs.chart.querySelector("chart-legend").style.backgroundColor =
+          "white";
       }
       this.chart.update();
     }
