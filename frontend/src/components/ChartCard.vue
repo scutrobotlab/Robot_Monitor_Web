@@ -10,7 +10,7 @@ export default {
   data: () => ({
     ws: null,
     chart: null,
-    indexColor: 0,
+    indexColor: -1,
     lineColors: {
       light: [
         colors.red.lighten1,
