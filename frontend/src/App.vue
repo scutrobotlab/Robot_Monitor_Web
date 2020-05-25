@@ -41,6 +41,11 @@ export default {
   props: {
     source: String
   },
+  mounted() {
+    this.$vuetify.theme.dark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+  },
   methods: {
     switchDrawer() {
       this.$refs.DrawerList.switchDrawer();
