@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ./frontend
-npm install
+npm ci
 npm run build
 cd ..
 cp main.go main.go.org
