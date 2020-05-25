@@ -4,17 +4,16 @@
       <v-list-item-title>串口</v-list-item-title>
     </v-list-item>
     <v-list-item>
+      <v-list-item-action>
+        <v-switch v-model="status" v-on:change="optSerial()" inset></v-switch>
+      </v-list-item-action>
       <v-select
-        prepend-icon="mdi-serial-port"
         :items="serialList"
         v-model="serial"
         v-on:click="getSerialList()"
         v-bind:disabled="status"
         label="选择串口"
       ></v-select>
-      <v-list-item-action>
-        <v-switch v-model="status" v-on:change="optSerial()" inset></v-switch>
-      </v-list-item-action>
     </v-list-item>
   </v-list>
 </template>

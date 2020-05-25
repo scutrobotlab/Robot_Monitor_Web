@@ -38,7 +38,7 @@ func FindSerialPorts() []string {
 		log.Println("No serial ports found!")
 	}
 	for _, port := range tmp {
-		if strings.Contains(port, "USB") || strings.Contains(port, "ACM") || strings.Contains(port, "COM") {
+		if strings.Contains(port, "USB") || strings.Contains(port, "ACM") || strings.Contains(port, "COM") || strings.Contains(port, "tty.usb") {
 			ports = append(ports, port)
 		}
 	}
