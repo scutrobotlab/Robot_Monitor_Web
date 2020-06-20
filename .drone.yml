@@ -2,8 +2,31 @@ kind: pipeline
 name: default
 
 steps:
-- name: test
+- name: frontend
+  image: node
+  commands:
+  - cd frontend
+  - npm ci --registry=https://registry.npm.taobao.org
+  - npm run build
+
+- name: backend
   image: golang
   commands:
-  - sh build.sh
+    - sh build_go.sh
+
+- name: gitea_release
+  image: plugins/gitea-release
+  settings:
+    base_url: 
+      from_secret: gitea_url
+    api_key:
+      from_secret: gitea_token
+    checksum:
+      - sha256
+    files:
+      - Robot_Monitor_Web_linux.zip
+      - Robot_Monitor_Web_mac.zip
+      - Robot_Monitor_Web_windows.zip
+  when:
+    event: tag
   
