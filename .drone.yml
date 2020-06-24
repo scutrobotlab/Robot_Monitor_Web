@@ -12,6 +12,8 @@ steps:
 - name: backend
   image: golang
   commands:
+    - apt-get update
+    - apt-get install -y zip upx
     - sh build_go.sh
 
 - name: gitea_release
@@ -21,8 +23,6 @@ steps:
       from_secret: gitea_url
     api_key:
       from_secret: gitea_token
-    checksum:
-      - sha256
     files:
       - Robot_Monitor_Web_linux.zip
       - Robot_Monitor_Web_mac.zip
