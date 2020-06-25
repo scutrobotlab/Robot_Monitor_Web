@@ -18,9 +18,9 @@
       ></v-switch>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <router-view></router-view>
-    </v-content>
+    </v-main>
 
     <v-footer app color="primary">
       <span class="white--text">华工机器人实验室</span>
