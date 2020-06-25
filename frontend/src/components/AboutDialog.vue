@@ -2,8 +2,8 @@
   <v-dialog v-model="dialog" max-width="400">
     <v-card>
       <v-list-item>
-        <v-list-item-avatar>
-          <img src="@/assets/logo.jpg" alt="Logo" />
+        <v-list-item-avatar tile size="125">
+          <img src="@/assets/logo.png" alt="Logo" />
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>华工机器人实验室巨献</v-list-item-title>
