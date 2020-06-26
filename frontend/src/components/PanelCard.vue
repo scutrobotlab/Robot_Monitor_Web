@@ -5,10 +5,10 @@
       :close-on-content-click="false"
       transition="scale-transition"
       offset-y
-      :nudge-top="300"
+      :nudge-top="270"
     >
       <template v-slot:activator="{ on }">
-        <v-btn color="secondary" dark absolute bottom left fab v-on="on">
+        <v-btn class="ma-8" color="secondary" dark absolute bottom left fab v-on="on">
           <v-icon>mdi-iframe-variable</v-icon>
         </v-btn>
       </template>

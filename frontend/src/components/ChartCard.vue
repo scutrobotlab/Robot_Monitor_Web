@@ -1,6 +1,6 @@
 <template>
-  <v-card>
-    <div ref="chart" style="width: 100%; height: 420px;"></div>
+  <v-card style="overflow-y: hidden;">
+    <div ref="chart" style="width: 100%; height: 77vh;"></div>
   </v-card>
 </template>
 <script>

@@ -1,11 +1,7 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12">
-        <ChartCard />
-      </v-col>
-      <PanelCard />
-    </v-row>
+    <ChartCard />
+    <PanelCard />
   </v-container>
 </template>
 
