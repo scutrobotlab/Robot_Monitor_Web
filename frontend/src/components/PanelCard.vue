@@ -3,12 +3,22 @@
     <v-menu
       v-model="menu"
       :close-on-content-click="false"
-      transition="scale-transition"
+      transition="slide-x-transition"
+      top
       offset-y
-      :nudge-top="270"
     >
-      <template v-slot:activator="{ on }">
-        <v-btn class="ma-8" color="secondary" dark absolute bottom left fab v-on="on">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          class="ma-8"
+          color="secondary"
+          dark
+          absolute
+          bottom
+          left
+          fab
+          v-on="on"
+          v-bind="attrs"
+        >
           <v-icon>mdi-iframe-variable</v-icon>
         </v-btn>
       </template>
