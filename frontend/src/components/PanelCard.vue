@@ -9,7 +9,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          class="ma-8"
+          class="mb-8"
           color="secondary"
           dark
           absolute
