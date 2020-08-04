@@ -19,7 +19,7 @@ export default {
         colors.purple.lighten1,
         colors.indigo.lighten1,
         colors.teal.lighten1,
-        colors.pink.lighten1
+        colors.pink.lighten1,
       ],
       dark: [
         colors.red.darken4,
@@ -28,14 +28,14 @@ export default {
         colors.purple.darken4,
         colors.indigo.darken4,
         colors.teal.darken4,
-        colors.pink.darken4
-      ]
-    }
+        colors.pink.darken4,
+      ],
+    },
   }),
   computed: {
     isDark() {
       return this.$vuetify.theme.dark;
-    }
+    },
   },
   created() {
     this.initWS();
@@ -45,14 +45,23 @@ export default {
   },
   mounted() {
     this.chart = new timechart(this.$refs.chart, {
-      baseTime: Date.now() - performance.now(),
+      baseTime: Date.now(),
       series: [],
       xRange: { min: 0, max: 20 * 1000 },
-      realTime: true
+      realTime: true,
+      zoom: {
+        x: {
+          autoRange: true,
+          minDomainExtent: 50,
+        },
+        y: {
+          autoRange: true,
+        },
+      },
     });
   },
   watch: {
-    isDark: function() {
+    isDark: function () {
       if (this.isDark) {
         for (var i in this.chart.options.series) {
           this.chart.options.series[i].color = this.lineColors.dark[i];
@@ -67,7 +76,7 @@ export default {
           "white";
       }
       this.chart.update();
-    }
+    },
   },
   methods: {
     initWS() {
@@ -104,30 +113,32 @@ export default {
       }
     },
     praseWS(data) {
-      if (data != "") {
-        const jsonWS = JSON.parse(data);
-        for (var i in jsonWS.DataPack) {
-          const fi = this.chart.options.series.findIndex(
-            a => a.name == jsonWS.DataPack[i].Name
-          );
-          if (fi > -1) {
-            this.chart.options.series[fi].data.push({
-              x: jsonWS.DataPack[i].Tick,
-              y: jsonWS.DataPack[i].Data
-            });
-          } else {
-            const color = this.selectColor();
-            this.chart.options.series.push({
-              name: jsonWS.DataPack[i].Name,
-              color: color,
-              data: [{ x: jsonWS.DataPack[i].Tick, y: jsonWS.DataPack[i].Data }]
-            });
-            this.iColor++;
-          }
-        }
-        this.chart.update();
+      if (!data) {
+        return;
       }
-    }
-  }
+
+      const jsonWS = JSON.parse(data);
+      for (const dp of jsonWS.DataPack) {
+        let series = this.chart.options.series.find(
+          (a) => a.name == dp.Name
+        );
+        if (!series) {
+          const color = this.selectColor();
+          series = {
+            name: dp.Name,
+            color: color,
+            data: [],
+          };
+          this.chart.options.series.push(series);
+          this.iColor++;
+        }
+        series.data.push({
+          x: dp.Tick / 1000,
+          y: dp.Data,
+        });
+      }
+      this.chart.update();
+    },
+  },
 };
 </script>
