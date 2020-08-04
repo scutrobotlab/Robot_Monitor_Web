@@ -59,6 +59,9 @@ export default {
         },
       },
     });
+    this.$nextTick(() => {
+      this.chart.onResize();
+    });
   },
   watch: {
     isDark: function () {
