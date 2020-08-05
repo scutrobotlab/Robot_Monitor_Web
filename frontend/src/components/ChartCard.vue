@@ -136,7 +136,7 @@ export default {
           this.iColor++;
         }
         series.data.push({
-          x: dp.Tick / 1000,
+          x: dp.Tick,
           y: dp.Data,
         });
       }

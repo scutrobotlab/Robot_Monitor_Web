@@ -66,7 +66,7 @@ func (tp *testPort) Read(p []byte) (n int, err error) {
 		copy(s[3:7], datapack.AnyToBytes(addr))
 		t := time.Now().Sub(tp.createdTime)
 		x := t.Seconds()
-		u := t.Microseconds()
+		u := t.Milliseconds()
 		y := testValue(x, addr)
 		copy(s[7:15], datapack.AnyToBytes(y))
 		copy(s[15:19], datapack.AnyToBytes(uint32(u)))
