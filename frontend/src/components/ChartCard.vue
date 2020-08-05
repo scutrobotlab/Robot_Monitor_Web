@@ -69,14 +69,10 @@ export default {
         for (var i in this.chart.options.series) {
           this.chart.options.series[i].color = this.lineColors.dark[i];
         }
-        this.$refs.chart.querySelector("chart-legend").style.backgroundColor =
-          "black";
       } else {
         for (i in this.chart.options.series) {
           this.chart.options.series[i].color = this.lineColors.light[i];
         }
-        this.$refs.chart.querySelector("chart-legend").style.backgroundColor =
-          "white";
       }
       this.chart.update();
     },
@@ -145,3 +141,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.theme--light chart-legend {
+  background: white;
+}
+.theme--dark chart-legend {
+  background: black;
+}
+</style>
