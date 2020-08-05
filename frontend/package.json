@@ -10,7 +10,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
-    "timechart": "^0.4.1",
+    "timechart": "^0.4.2",
     "vue": "^2.6.11",
     "vue-router": "^3.3.4",
     "vue-toasted": "^1.1.28",

@@ -1,6 +1,6 @@
 <template>
   <v-card style="overflow-y: hidden;">
-    <div ref="chart" style="width: 100%; height: 77vh;"></div>
+    <div :class="themeClasses" ref="chart" style="width: 100%; height: 77vh;"></div>
   </v-card>
 </template>
 <script>
@@ -131,11 +131,11 @@ export default {
 };
 </script>
 
-<style>
-.theme--light chart-legend {
-  background: white;
+<style scoped>
+.theme--light {
+  --background-overlay: white;
 }
-.theme--dark chart-legend {
-  background: black;
+.theme--dark {
+  --background-overlay: black;
 }
 </style>
