@@ -1,6 +1,10 @@
 <template>
   <v-card style="overflow-y: hidden;">
     <div :class="themeClasses" ref="chart" style="width: 100%; height: 77vh;"></div>
+    <v-card-actions>
+      <v-btn text color='accent' @click="follow">跟随</v-btn>
+      <v-btn text color='grey' @click="exportData">导出</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 <script>
@@ -126,6 +130,21 @@ export default {
         });
       }
       this.chart.update();
+    },
+    follow() {
+      this.chart.options.realTime = true;
+    },
+    exportData() {
+      const json = JSON.stringify(this.chart.options);
+      const blob = new Blob([json], {type: 'application/json'});
+      const anchor = document.createElement("a");
+      anchor.href = URL.createObjectURL(blob);
+      anchor.download = '上位机导出数据.json';
+      anchor.style.display = "none";
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(anchor.href);
     },
   },
 };
