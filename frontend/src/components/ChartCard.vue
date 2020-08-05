@@ -6,37 +6,35 @@
 <script>
 import timechart from "timechart";
 import colors from "vuetify/lib/util/colors";
+import Themeable from "vuetify/lib/mixins/themeable";
+
+const lineColors = {
+  light: [
+    colors.red.base,
+    colors.green.base,
+    colors.orange.base,
+    colors.purple.base,
+    colors.indigo.base,
+    colors.teal.base,
+    colors.pink.base,
+  ],
+  dark: [
+    colors.red.lighten2,
+    colors.green.lighten2,
+    colors.orange.lighten2,
+    colors.purple.lighten2,
+    colors.indigo.lighten2,
+    colors.teal.lighten2,
+    colors.pink.lighten2,
+  ],
+};
+
 export default {
+  name: 'ChartCard',
+  mixins: [Themeable],
   data: () => ({
-    ws: null,
-    chart: null,
     indexColor: -1,
-    lineColors: {
-      light: [
-        colors.red.base,
-        colors.green.base,
-        colors.orange.base,
-        colors.purple.base,
-        colors.indigo.base,
-        colors.teal.base,
-        colors.pink.base,
-      ],
-      dark: [
-        colors.red.lighten2,
-        colors.green.lighten2,
-        colors.orange.lighten2,
-        colors.purple.lighten2,
-        colors.indigo.lighten2,
-        colors.teal.lighten2,
-        colors.pink.lighten2,
-      ],
-    },
   }),
-  computed: {
-    isDark() {
-      return this.$vuetify.theme.dark;
-    },
-  },
   created() {
     this.initWS();
   },
@@ -65,14 +63,8 @@ export default {
   },
   watch: {
     isDark: function () {
-      if (this.isDark) {
-        for (var i in this.chart.options.series) {
-          this.chart.options.series[i].color = this.lineColors.dark[i];
-        }
-      } else {
-        for (i in this.chart.options.series) {
-          this.chart.options.series[i].color = this.lineColors.light[i];
-        }
+      for (const s of this.chart.options.series) {
+        this.updateColor(s);
       }
       this.chart.update();
     },
@@ -102,14 +94,10 @@ export default {
     WSonerror(evt) {
       console.log("ERROR: " + evt.data);
     },
-    selectColor() {
-      this.indexColor++;
-      this.indexColor == this.lineColors.light.length ? 0 : this.indexColor;
-      if (this.$vuetify.theme.dark) {
-        return this.lineColors.dark[this.indexColor];
-      } else {
-        return this.lineColors.light[this.indexColor];
-      }
+    updateColor(series) {
+      const index = series.colorIndex;
+      const colorArray = this.isDark ? lineColors.dark : lineColors.light;
+      series.color = colorArray[index % colorArray.length];
     },
     praseWS(data) {
       if (!data) {
@@ -117,19 +105,20 @@ export default {
       }
 
       const jsonWS = JSON.parse(data);
+      const seriesArray = this.chart.options.series;
       for (const dp of jsonWS.DataPack) {
-        let series = this.chart.options.series.find(
+        let series = seriesArray.find(
           (a) => a.name == dp.Name
         );
         if (!series) {
-          const color = this.selectColor();
+          this.indexColor++;
           series = {
             name: dp.Name,
-            color: color,
+            colorIndex: this.indexColor,
             data: [],
           };
-          this.chart.options.series.push(series);
-          this.iColor++;
+          this.updateColor(series);
+          seriesArray.push(series);
         }
         series.data.push({
           x: dp.Tick,
