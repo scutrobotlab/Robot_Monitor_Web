@@ -2,8 +2,9 @@
   <v-card style="overflow-y: hidden;">
     <div :class="themeClasses" ref="chart" style="width: 100%; height: 77vh;"></div>
     <v-card-actions>
-      <v-btn text color="accent" @click="follow">跟随</v-btn>
-      <v-btn text color="grey" @click="exportData">导出</v-btn>
+      <v-spacer></v-spacer>
+      <v-btn text @click="exportData">导出</v-btn>
+      <v-btn text color="primaryText" @click="follow">跟随</v-btn>
     </v-card-actions>
   </v-card>
 </template>
