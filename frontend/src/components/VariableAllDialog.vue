@@ -15,7 +15,12 @@
             <v-file-input label="上传变量地址表文件" v-model="file"></v-file-input>
           </v-col>
           <v-col cols="8">
-            <v-text-field clearable placeholder="搜索变量" prepend-icon="mdi-magnify" v-model="keyword"></v-text-field>
+            <v-text-field
+              clearable
+              placeholder="搜索变量"
+              prepend-icon="mdi-magnify"
+              v-model="keyword"
+            ></v-text-field>
           </v-col>
         </v-row>
 
@@ -32,9 +37,9 @@
             </thead>
             <tbody>
               <tr v-for="list in searchData" :key="list.Name">
-                <td>{{list.Name}}</td>
-                <td>{{list.Type}}</td>
-                <td>{{list.Addr}}</td>
+                <td>{{ list.Name }}</td>
+                <td>{{ list.Type }}</td>
+                <td>{{ list.Addr }}</td>
                 <td>
                   <v-btn icon v-on:click="variableReadAdd(list)">
                     <v-icon>mdi-plus</v-icon>
@@ -62,7 +67,7 @@ export default {
     file: null,
     lists: [],
     searchData: [],
-    keyword: ""
+    keyword: "",
   }),
   watch: {
     file: function() {
@@ -70,9 +75,9 @@ export default {
       let param = new FormData();
       param.append("file", file);
       let config = {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       };
-      axios.post("/file/upload", param, config).then(response => {
+      axios.post("/file/upload", param, config).then((response) => {
         if (response.data.status == 0) {
           this.getVariableList();
           this.$toasted.show("文件上传成功");
@@ -102,7 +107,7 @@ export default {
       } else {
         return this.searchData;
       }
-    }
+    },
   },
   mounted() {
     this.getVariableList();
@@ -116,7 +121,7 @@ export default {
       this.dialog = false;
     },
     getVariableList() {
-      axios.get("/file/variables").then(response => {
+      axios.get("/file/variables").then((response) => {
         this.lists = response.data.Variables;
         this.searchData = response.data.Variables;
       });
@@ -127,9 +132,9 @@ export default {
           Board: 1,
           Name: i.Name,
           Type: i.Type,
-          Addr: parseInt(i.Addr, 16)
+          Addr: parseInt(i.Addr, 16),
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.status == 0) {
             this.$toasted.show("变量添加成功");
           } else if (response.data.status == 22) {
@@ -145,9 +150,9 @@ export default {
           Board: 1,
           Name: i.Name,
           Type: i.Type,
-          Addr: parseInt(i.Addr, 16)
+          Addr: parseInt(i.Addr, 16),
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.status == 0) {
             this.$toasted.show("变量添加成功");
           } else if (response.data.status == 22) {
@@ -156,7 +161,7 @@ export default {
             this.$toasted.error("重复添加变量");
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>

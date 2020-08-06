@@ -1,7 +1,7 @@
 <template>
   <v-list>
     <v-list-item>
-      <v-list-item-title>变量·{{showtext}}</v-list-item-title>
+      <v-list-item-title>变量·{{ showtext }}</v-list-item-title>
       <v-spacer></v-spacer>
       <v-list-item-icon>
         <v-btn icon v-on:click="openDialog()">
@@ -16,7 +16,7 @@
           <v-icon>mdi-variable</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>{{i.Name}}</v-list-item-title>
+          <v-list-item-title>{{ i.Name }}</v-list-item-title>
         </v-list-item-content>
       </template>
 
@@ -24,7 +24,7 @@
         <v-list-item-icon>
           <v-icon>mdi-tag-multiple</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>{{i.Type}}</v-list-item-content>
+        <v-list-item-content>{{ i.Type }}</v-list-item-content>
         <v-btn icon absolute small right v-on:click="delVariable(i)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -33,7 +33,7 @@
         <v-list-item-icon>
           <v-icon>mdi-view-list</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>{{hexdsp(i.Addr)}}</v-list-item-content>
+        <v-list-item-content>{{ hexdsp(i.Addr) }}</v-list-item-content>
       </v-list-item>
     </v-list-group>
     <VariableNewDialog @getVariables="getVariables" ref="VariableNewDialog" v-bind:opt="opt" />
@@ -46,11 +46,11 @@ import VariableNewDialog from "@/components/VariableNewDialog.vue";
 export default {
   props: ["showtext"],
   components: {
-    VariableNewDialog
+    VariableNewDialog,
   },
   data: () => ({
     opt: "",
-    variables: []
+    variables: [],
   }),
   mounted() {
     this.opt = this.showtext == "观察" ? "read" : "modi";
@@ -67,7 +67,7 @@ export default {
       return "0x" + z + h;
     },
     getVariables() {
-      axios.get("/variable-" + this.opt + "/list").then(response => {
+      axios.get("/variable-" + this.opt + "/list").then((response) => {
         this.variables = response.data.Variables;
       });
     },
@@ -77,9 +77,9 @@ export default {
           Board: 1,
           Name: i.Name,
           Type: i.Type,
-          Addr: i.Addr
+          Addr: i.Addr,
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.status == 0) {
             this.getVariables();
             this.$toasted.show("变量删除成功");
@@ -89,7 +89,7 @@ export default {
             this.$toasted.error("删除未添加的变量");
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>

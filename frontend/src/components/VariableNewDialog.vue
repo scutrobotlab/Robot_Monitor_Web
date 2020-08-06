@@ -15,10 +15,10 @@
               <v-row>
                 <v-col cols="12" sm="6" md="6">
                   <v-select
-                    :items="[1,2,3]"
+                    :items="[1, 2, 3]"
                     label="板子代号"
                     hint="保持默认为1即可"
-                    :rules="[v => !!v || '板子代号是必要的']"
+                    :rules="[(v) => !!v || '板子代号是必要的']"
                     required
                     v-model="Board"
                   ></v-select>
@@ -27,7 +27,7 @@
                   <v-select
                     :items="types"
                     label="变量类型"
-                    :rules="[v => !!v || '变量类型是必要的']"
+                    :rules="[(v) => !!v || '变量类型是必要的']"
                     required
                     v-model="Type"
                   ></v-select>
@@ -36,7 +36,7 @@
                   <v-text-field
                     label="变量名"
                     type="text"
-                    :rules="[v => !!v || '变量名是必要的']"
+                    :rules="[(v) => !!v || '变量名是必要的']"
                     required
                     v-model="Name"
                   ></v-text-field>
@@ -78,12 +78,12 @@ export default {
     Type: "",
     Addr: "",
     AddrRules: [
-      v => !!v || "变量地址是必要的",
-      v => /2[0-9a-f]{7}/.test(v) || "格式错误，应形如2000ab78"
-    ]
+      (v) => !!v || "变量地址是必要的",
+      (v) => /2[0-9a-f]{7}/.test(v) || "格式错误，应形如2000ab78",
+    ],
   }),
   mounted() {
-    axios.get("/variable/types").then(response => {
+    axios.get("/variable/types").then((response) => {
       this.types = response.data.Types;
     });
   },
@@ -98,9 +98,9 @@ export default {
             Board: 1,
             Name: this.Name,
             Type: this.Type,
-            Addr: parseInt(this.Addr, 16)
+            Addr: parseInt(this.Addr, 16),
           })
-          .then(response => {
+          .then((response) => {
             if (response.data.status == 0) {
               this.dialog = false;
               this.$toasted.show("变量添加成功");
@@ -112,7 +112,7 @@ export default {
             }
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>

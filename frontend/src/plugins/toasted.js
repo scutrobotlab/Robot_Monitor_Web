@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import Toasted from 'vue-toasted';
+import Vue from "vue";
+import Toasted from "vue-toasted";
 
-Vue.use(Toasted, { duration: 3000 })
+Vue.use(Toasted, { duration: 3000 });
 
-export default {}
+export default {};

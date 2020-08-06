@@ -53,7 +53,7 @@ import axios from "axios";
 export default {
   data: () => ({
     menu: false,
-    variables: []
+    variables: [],
   }),
   mounted() {
     this.getVariables();
@@ -63,7 +63,7 @@ export default {
       this.menu = true;
     },
     getVariables() {
-      axios.get("/variable-modi/list").then(response => {
+      axios.get("/variable-modi/list").then((response) => {
         this.variables = response.data.Variables;
       });
     },
@@ -74,16 +74,16 @@ export default {
           Name: i.Name,
           Type: i.Type,
           Addr: i.Addr,
-          Data: parseFloat(i.Data)
+          Data: parseFloat(i.Data),
         })
-        .then(response => {
+        .then((response) => {
           if (response.data.status == 0) {
             this.$toasted.show("变量修改成功");
           } else if (response.data.status == 22) {
             this.$toasted.error("变量操作时串口错误");
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>

@@ -24,7 +24,7 @@ export default {
   data: () => ({
     status: false,
     serial: null,
-    serialList: []
+    serialList: [],
   }),
   mounted() {
     this.getSerialList();
@@ -32,12 +32,12 @@ export default {
   },
   methods: {
     getSerialList() {
-      axios.get("/serial/list").then(response => {
+      axios.get("/serial/list").then((response) => {
         this.serialList = response.data.Ports;
       });
     },
     getSerial() {
-      axios.get("/serial").then(response => {
+      axios.get("/serial").then((response) => {
         this.serial = response.data.Name;
         if (this.serial) {
           this.status = true;
@@ -46,7 +46,7 @@ export default {
     },
     optSerial() {
       if (this.status) {
-        axios.get("/serial/open?port=" + this.serial).then(response => {
+        axios.get("/serial/open?port=" + this.serial).then((response) => {
           if (response.data.status == 0) {
             this.$toasted.show("串口打开成功");
           } else if (response.data.status == 1) {
@@ -58,7 +58,7 @@ export default {
           }
         });
       } else {
-        axios.get("/serial/close").then(response => {
+        axios.get("/serial/close").then((response) => {
           if (response.data.status == 0) {
             this.$toasted.show("串口关闭成功");
           } else if (response.data.status == 12) {
@@ -70,7 +70,7 @@ export default {
           }
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

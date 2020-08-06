@@ -14,7 +14,7 @@
         hide-details
         inset
         color="black"
-        v-bind:label="$vuetify.theme.dark?'深色模式':'浅色模式'"
+        v-bind:label="$vuetify.theme.dark ? '深色模式' : '浅色模式'"
       ></v-switch>
     </v-app-bar>
 
@@ -36,15 +36,13 @@ import AboutDialog from "@/components/AboutDialog.vue";
 export default {
   components: {
     DrawerList,
-    AboutDialog
+    AboutDialog,
   },
   props: {
-    source: String
+    source: String,
   },
   mounted() {
-    this.$vuetify.theme.dark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
+    this.$vuetify.theme.dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   },
   methods: {
     switchDrawer() {
@@ -52,7 +50,7 @@ export default {
     },
     openDialog() {
       this.$refs.AboutDialog.openDialog();
-    }
-  }
+    },
+  },
 };
 </script>

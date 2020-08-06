@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
+import Vue from "vue";
+import Vuetify from "vuetify/lib";
 
-import colors from 'vuetify/lib/util/colors'
+import colors from "vuetify/lib/util/colors";
 
-Vue.use(Vuetify)
+Vue.use(Vuetify);
 
 export default new Vuetify({
   theme: {
@@ -17,7 +17,7 @@ export default new Vuetify({
         primary: colors.blue.darken4,
         secondary: colors.cyan.darken4,
         accent: colors.cyan.accent1,
-      }
+      },
     },
   },
-})
+});

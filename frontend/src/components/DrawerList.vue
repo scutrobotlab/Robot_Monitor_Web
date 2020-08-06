@@ -35,10 +35,10 @@ export default {
     SerialPort,
     SaveConfig,
     VariableList,
-    VariableAllDialog
+    VariableAllDialog,
   },
   data: () => ({
-    drawer: null
+    drawer: null,
   }),
   methods: {
     switchDrawer() {
@@ -50,7 +50,7 @@ export default {
     getAllV() {
       this.$refs.cardRead.getVariables();
       this.$refs.cardModi.getVariables();
-    }
-  }
+    },
+  },
 };
 </script>

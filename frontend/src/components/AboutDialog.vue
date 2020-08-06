@@ -33,12 +33,12 @@
 export default {
   data: () => ({
     dialog: false,
-    hc: ""
+    hc: "",
   }),
   methods: {
     openDialog() {
       this.dialog = true;
-    }
-  }
+    },
+  },
 };
 </script>

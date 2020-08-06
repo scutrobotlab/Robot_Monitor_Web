@@ -11,7 +11,7 @@ import PanelCard from "@/components/PanelCard.vue";
 export default {
   components: {
     ChartCard,
-    PanelCard
-  }
+    PanelCard,
+  },
 };
 </script>

@@ -2,8 +2,8 @@
   <v-card style="overflow-y: hidden;">
     <div :class="themeClasses" ref="chart" style="width: 100%; height: 77vh;"></div>
     <v-card-actions>
-      <v-btn text color='accent' @click="follow">跟随</v-btn>
-      <v-btn text color='grey' @click="exportData">导出</v-btn>
+      <v-btn text color="accent" @click="follow">跟随</v-btn>
+      <v-btn text color="grey" @click="exportData">导出</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -34,7 +34,7 @@ const lineColors = {
 };
 
 export default {
-  name: 'ChartCard',
+  name: "ChartCard",
   mixins: [Themeable],
   data: () => ({
     indexColor: -1,
@@ -66,7 +66,7 @@ export default {
     });
   },
   watch: {
-    isDark: function () {
+    isDark: function() {
       for (const s of this.chart.options.series) {
         this.updateColor(s);
       }
@@ -111,9 +111,7 @@ export default {
       const jsonWS = JSON.parse(data);
       const seriesArray = this.chart.options.series;
       for (const dp of jsonWS.DataPack) {
-        let series = seriesArray.find(
-          (a) => a.name == dp.Name
-        );
+        let series = seriesArray.find((a) => a.name == dp.Name);
         if (!series) {
           this.indexColor++;
           series = {
@@ -136,10 +134,10 @@ export default {
     },
     exportData() {
       const json = JSON.stringify(this.chart.options);
-      const blob = new Blob([json], {type: 'application/json'});
+      const blob = new Blob([json], { type: "application/json" });
       const anchor = document.createElement("a");
       anchor.href = URL.createObjectURL(blob);
-      anchor.download = '上位机导出数据.json';
+      anchor.download = "上位机导出数据.json";
       anchor.style.display = "none";
       document.body.appendChild(anchor);
       anchor.click();
